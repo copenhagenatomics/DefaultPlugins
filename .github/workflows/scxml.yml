@@ -1,4 +1,4 @@
-#calls a reusable workflow to build the scxml plugins
+# Calls a reusable workflow to build the scxml plugins
 name: scxml
 on:
   push:
