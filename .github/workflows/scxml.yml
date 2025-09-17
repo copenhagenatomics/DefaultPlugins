@@ -1,0 +1,16 @@
+# Calls a reusable workflow to build the scxml plugins
+name: scxml
+on:
+  push:
+    paths: [ 'scxml/**', '.github/workflows/scxml.yml', 'src/**' ]
+    branches: [ main ]
+  pull_request:
+    paths: [ 'scxml/**', '.github/workflows/scxml.yml', 'src/**' ]
+    branches: [ main ]
+jobs:
+  call-scxml:
+    uses: copenhagenatomics/BasePlugins/.github/workflows/scxml.yml@main
+    with:
+      BLOB_URL: ${{ vars.BLOB_URL }}
+    secrets:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

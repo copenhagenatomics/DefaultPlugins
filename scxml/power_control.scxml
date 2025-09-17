@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" datamodel="ecmascript" name="power_control">
+	<datamodel>
+		<data expr="20.0" id="conf_MaxCurrent" />
+		<data expr="0" id="conf_MaxCurrentUpdates" />
+		<data expr="false" id="this_currentSampled" />
+		<data expr="0.0" id="this_unlimitedTotalCurrent" />
+		<data expr="0.0" id="this_maxCurrent" />
+		<data expr="0.0" id="this_pwmPct" />
+		<data expr="0.0" id="fieldlist_Heaters_onoff" />
+		<data expr="0.0" id="fieldlist_Heaters_currentsampled" />
+		<data expr="0.0" id="fieldlist_Heaters_targetoutput" />
+		<data expr="0.0" id="this_fieldlist_Heaters_onoff_cache" />
+	</datamodel>
+	<state id="main_region">
+		<initial>
+			<transition target="config_check" type="internal">
+			</transition>
+		</initial>
+		<state id="config_check">
+			<onentry>
+				 <assign location="this_maxCurrent" expr="conf_MaxCurrent"/>
+			</onentry>
+			<transition   target="waiting">
+			</transition>
+		</state>
+		<state id="running">
+			<onentry>
+				<send event="running_t_0_timeEvent_0" delay="1s"/>
+			</onentry>
+			<onexit>
+				<cancel sendid="running_t_0_timeEvent_0" />
+			</onexit>
+			<initial>
+				<transition target="calculate_and_update" type="internal">
+				</transition>
+			</initial>
+			<state id="calculate_and_update">
+				<onentry>
+					 <assign location="this_unlimitedTotalCurrent" expr="0"/>
+				</onentry>
+				<transition event ="fieldlist.Heaters_foreach"  type="internal" >
+					 <assign location="this_currentSampled" expr="fieldlist_Heaters_currentsampled &gt; 0"/>
+					 <assign location="this_unlimitedTotalCurrent" expr="this_unlimitedTotalCurrent + (this_currentSampled ? fieldlist_Heaters_currentsampled * fieldlist_Heaters_targetoutput : 0.0)"/>
+				</transition>
+				<transition event ="fieldlist.Heaters_foreach"  type="internal" >
+					 <assign location="this_pwmPct" expr="this_unlimitedTotalCurrent &gt; 0.0 ? this_maxCurrent / this_unlimitedTotalCurrent : 0.0"/>
+					 <assign location="this_pwmPct" expr="(this_pwmPct &gt; 1.0 ? 1.0 : this_pwmPct)"/>
+					 <assign location="this_currentSampled" expr="fieldlist_Heaters_currentsampled &gt; 0"/>
+					 <assign location="this_fieldlist_Heaters_onoff_cache" expr="this_currentSampled ? this_pwmPct * fieldlist_Heaters_targetoutput : 0.0"/>
+					 <assign location="fieldlist_Heaters_onoff" expr="this_fieldlist_Heaters_onoff_cache"/>
+				</transition>
+				<transition  cond="this_unlimitedTotalCurrent &gt; 0" target="hold">
+				</transition>
+			</state>
+			<state id="hold">
+				<transition event ="fieldlist.Heaters_foreach"  type="internal" >
+					 <assign location="fieldlist_Heaters_onoff" expr="this_fieldlist_Heaters_onoff_cache"/>
+				</transition>
+			</state>
+			<transition event="running_t_0_timeEvent_0"  target="running">
+			</transition>
+			<transition event="this.update_maxCurrent"  target="UpdatingMaxCurrent">
+			</transition>
+		</state>
+		<state id="waiting">
+			<transition event ="fieldlist.Heaters_foreach"  type="internal" >
+				 <assign location="this_currentSampled" expr="this_currentSampled | fieldlist_Heaters_currentsampled &gt; 0"/>
+				 <assign location="fieldlist_Heaters_onoff" expr="0.0"/>
+			</transition>
+			<transition  cond="this_currentSampled" target="running">
+			</transition>
+			<transition event="this.update_maxCurrent"  target="UpdatingMaxCurrent">
+			</transition>
+		</state>
+		<state id="UpdatingMaxCurrent">
+			<onentry>
+				 <assign location="this_maxCurrent" expr="conf_MaxCurrentUpdates == 1 ? _event.data : this_maxCurrent"/>
+			</onentry>
+			<transition event="vector"  target="waiting">
+			</transition>
+		</state>
+	</state>
+</scxml>

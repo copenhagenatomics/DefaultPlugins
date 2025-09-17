@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" datamodel="ecmascript" name="assign">
+	<datamodel>
+		<data expr="0.0" id="source" />
+		<data expr="0.0" id="target" />
+	</datamodel>
+	<state id="main_region">
+		<initial>
+			<transition target="assign" type="internal">
+			</transition>
+		</initial>
+		<state id="assign">
+			<transition event ="vector"  type="internal" >
+				 <assign location="target" expr="source"/>
+			</transition>
+		</state>
+	</state>
+</scxml>

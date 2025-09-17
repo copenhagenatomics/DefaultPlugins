@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" datamodel="ecmascript" name="power_control_current_sampling">
+	<datamodel>
+		<data expr="1.0" id="conf_MinValidCurrent" />
+		<data expr="1" id="conf_OnSeconds" />
+		<data expr="0" id="conf_OffSeconds" />
+		<data expr="3" id="conf_TemperatureOnSeconds" />
+		<data expr="3" id="conf_TemperatureOffSeconds" />
+		<data expr="3.0" id="conf_TemperatureDelta" />
+		<data expr="0.005" id="conf_LiveMinOn" />
+		<data expr="600" id="conf_LiveCyclesWithoutCurrent" />
+		<data expr="0" id="this_samplingindex" />
+		<data expr="0" id="this_index" />
+		<data expr="0" id="this_checkingall" />
+		<data expr="false" id="this_check_error" />
+		<data expr="0" id="this_count" />
+		<data expr="0.0" id="this_temperaturetarget" />
+		<data expr="0.0" id="fieldlist_Heaters_current" />
+		<data expr="0.0" id="fieldlist_Heaters_onoff" />
+		<data expr="0.0" id="fieldlist_Heaters_targetoutput" />
+		<data expr="0.0" id="fieldlist_Heaters_degC" />
+		<data expr="0.0" id="this_fieldlist_Heaters_currentsampled" />
+		<data expr="0.0" id="this_fieldlist_Heaters_nocurrentcycles" />
+		<data expr="0.0" id="this_fieldlist_Heaters_lowcurrent_error" />
+		<data expr="0.0" id="this_fieldlist_Heaters_low_heating_error" />
+	</datamodel>
+	<state id="main_region">
+		<initial>
+			<transition target="init" type="internal">
+			</transition>
+		</initial>
+		<state id="waiting">
+			<onentry>
+				 <assign location="this_check_error" expr="false"/>
+			</onentry>
+			<onentry>
+				 <assign location="this_index" expr="0"/>
+			</onentry>
+			<transition event ="vector"  type="internal" >
+				 <assign location="this_index" expr="0"/>
+			</transition>
+			<transition event ="fieldlist.Heaters_foreach"  type="internal" >
+				 <assign location="this_check_error" expr="this_check_error || (this_fieldlist_Heaters_currentsampled &lt; 0 &amp;&amp; this_fieldlist_Heaters_currentsampled != -2)"/>
+				 <assign location="this_samplingindex" expr="this_samplingindex == -1 &amp;&amp; fieldlist_Heaters_targetoutput &gt; 0.0 &amp;&amp; this_fieldlist_Heaters_currentsampled == 0 ? this_index : this_samplingindex"/>
+				 <assign location="this_fieldlist_Heaters_nocurrentcycles" expr="fieldlist_Heaters_current &gt;= conf_MinValidCurrent ? 0 : this_fieldlist_Heaters_nocurrentcycles + (fieldlist_Heaters_onoff &gt; conf_LiveMinOn &amp;&amp; this_fieldlist_Heaters_nocurrentcycles &lt; conf_LiveCyclesWithoutCurrent ? 1 : 0)"/>
+				 <assign location="this_fieldlist_Heaters_lowcurrent_error" expr="this_fieldlist_Heaters_nocurrentcycles &gt;= conf_LiveCyclesWithoutCurrent ? 1 : 0"/>
+				 <assign location="this_index" expr="this_index + 1"/>
+			</transition>
+			<transition event="resample_currents"  target="start_resampling">
+			</transition>
+			<transition event="this.check"  target="start_resampling">
+			</transition>
+			<transition event="this.check_heater"  target="single_heater_check">
+			</transition>
+			<transition event="this.skip_failed"  target="skip_failed_heaters">
+			</transition>
+			<transition event="this.skip_reset"  target="reset_skipped_heaters">
+			</transition>
+			<transition event="this.skip_heater"  target="skip_specific_heater">
+			</transition>
+			<transition  cond="this_checkingall == 1" target="start_resampling">
+			</transition>
+			<transition  cond="this_samplingindex != -1" target="turn_on_heater">
+			</transition>
+			<transition  cond="this_checkingall == 2" target="start_temperature_check">
+			</transition>
+			<transition event="this.check_temperatures"  target="start_temperature_check">
+			</transition>
+		</state>
+		<state id="init">
+			<onentry>
+				 <assign location="this_samplingindex" expr="-1"/>
+			</onentry>
+			<transition event ="fieldlist.Heaters_foreach"  type="internal" >
+				 <assign location="this_count" expr="this_count + 1"/>
+			</transition>
+			<transition event="vector"  target="waiting">
+			</transition>
+		</state>
+		<state id="turn_on_heater">
+			<onentry>
+				<send event="turn on heater_t_0_timeEvent_0" delayexpr="(this_checkingall == 2 ? conf_TemperatureOnSeconds : conf_OnSeconds) * 1000"/>
+			</onentry>
+			<onexit>
+				<cancel sendid="turn on heater_t_0_timeEvent_0" />
+			</onexit>
+			<onentry>
+				 <assign location="this_temperaturetarget" expr="0"/>
+			</onentry>
+			<onentry>
+				 <assign location="this_index" expr="0"/>
+			</onentry>
+			<transition event ="vector"  type="internal" >
+				 <assign location="this_index" expr="0"/>
+			</transition>
+			<transition event ="fieldlist.Heaters_foreach"  type="internal" >
+				 <assign location="fieldlist_Heaters_onoff" expr="this_index == this_samplingindex ? 1.0 : fieldlist_Heaters_onoff"/>
+				 <assign location="this_fieldlist_Heaters_lowcurrent_error" expr="this_index == this_samplingindex ? 0 : this_fieldlist_Heaters_lowcurrent_error"/>
+				 <assign location="this_fieldlist_Heaters_low_heating_error" expr="this_index == this_samplingindex ? 0 : this_fieldlist_Heaters_low_heating_error"/>
+				 <assign location="this_temperaturetarget" expr="this_index == this_samplingindex &amp;&amp; this_checkingall == 2 &amp;&amp; this_temperaturetarget == 0 ? fieldlist_Heaters_degC + conf_TemperatureDelta : this_temperaturetarget"/>
+				 <assign location="this_index" expr="this_index + 1"/>
+			</transition>
+			<transition event="turn on heater_t_0_timeEvent_0"  target="measure_current_and_turn_off_heater">
+			</transition>
+		</state>
+		<state id="measure_current_and_turn_off_heater">
+			<onentry>
+				 <assign location="this_index" expr="0"/>
+			</onentry>
+			<transition event ="fieldlist.Heaters_foreach"  type="internal" >
+				 <assign location="this_fieldlist_Heaters_currentsampled" expr="this_index == this_samplingindex ? (fieldlist_Heaters_current &gt; conf_MinValidCurrent ? fieldlist_Heaters_current : -1.0) : this_fieldlist_Heaters_currentsampled"/>
+				 <assign location="fieldlist_Heaters_onoff" expr="this_index == this_samplingindex ? 0.0 : fieldlist_Heaters_onoff"/>
+				 <assign location="this_fieldlist_Heaters_lowcurrent_error" expr="this_index == this_samplingindex ? (this_fieldlist_Heaters_currentsampled &lt; 0 ? 1 : 0) : this_fieldlist_Heaters_lowcurrent_error"/>
+				 <assign location="this_fieldlist_Heaters_nocurrentcycles" expr="this_index == this_samplingindex ? (this_fieldlist_Heaters_currentsampled &lt; 0 ? 600 : 0) : this_fieldlist_Heaters_nocurrentcycles"/>
+				 <assign location="this_index" expr="this_index + 1"/>
+			</transition>
+			<transition event="vector"  target="wait_off_seconds">
+			</transition>
+		</state>
+		<state id="start_resampling">
+			<onentry>
+				 <assign location="this_samplingindex" expr="-1"/>
+				 <assign location="this_checkingall" expr="1"/>
+			</onentry>
+			<transition   target="move_to_next_heater">
+			</transition>
+		</state>
+		<state id="single_heater_check">
+			<onentry>
+				 <assign location="this_samplingindex" expr="Math.floor(_event.data)"/>
+			</onentry>
+			<transition   target="turn_on_heater">
+			</transition>
+		</state>
+		<state id="skip_failed_heaters">
+			<transition event ="fieldlist.Heaters_foreach"  type="internal" >
+				 <assign location="this_fieldlist_Heaters_currentsampled" expr="this_fieldlist_Heaters_currentsampled &lt; 0 ? -2 : this_fieldlist_Heaters_currentsampled"/>
+			</transition>
+			<transition event="vector"  target="waiting">
+			</transition>
+		</state>
+		<state id="check_skip_before_next_heater">
+			<onentry>
+				 <assign location="this_index" expr="0"/>
+			</onentry>
+			<transition event ="fieldlist.Heaters_foreach"  type="internal" >
+				 <assign location="this_index" expr="this_index &lt; 0 ? this_index : (this_index == this_samplingindex &amp;&amp; this_fieldlist_Heaters_currentsampled == -2 ? -1 : this_index + 1)"/>
+			</transition>
+			<transition  cond="this_index &gt; 0" target="turn_on_heater">
+			</transition>
+			<transition  cond="this_index &lt; 0" target="move_to_next_heater">
+			</transition>
+		</state>
+		<state id="reset_skipped_heaters">
+			<transition event ="fieldlist.Heaters_foreach"  type="internal" >
+				 <assign location="this_fieldlist_Heaters_currentsampled" expr="this_fieldlist_Heaters_currentsampled == -2 ? 0 : this_fieldlist_Heaters_currentsampled"/>
+			</transition>
+			<transition event="vector"  target="waiting">
+			</transition>
+		</state>
+		<state id="skip_specific_heater">
+			<onentry>
+				 <assign location="this_index" expr="0"/>
+				 <assign location="this_samplingindex" expr="Math.floor(_event.data)"/>
+			</onentry>
+			<transition event ="fieldlist.Heaters_foreach"  type="internal" >
+				 <assign location="this_fieldlist_Heaters_currentsampled" expr="this_index == this_samplingindex ? -2 : this_fieldlist_Heaters_currentsampled"/>
+				 <assign location="this_index" expr="this_index + 1"/>
+			</transition>
+			<onexit>
+				 <assign location="this_samplingindex" expr="-1"/>
+			</onexit>
+			<transition event="vector"  target="waiting">
+			</transition>
+		</state>
+		<state id="move_to_next_heater">
+			<onentry>
+				 <assign location="this_checkingall" expr="this_checkingall &gt; 0 &amp;&amp; ((this_samplingindex + 1) &lt; this_count) ? this_checkingall : 0"/>
+				 <assign location="this_samplingindex" expr="this_checkingall &gt; 0 ? this_samplingindex + 1 : -1"/>
+			</onentry>
+			<transition  cond="this_checkingall == 0" target="waiting">
+			</transition>
+			<transition  cond="this_checkingall &gt; 0" target="check_skip_before_next_heater">
+			</transition>
+		</state>
+		<state id="wait_off_seconds">
+			<onentry>
+				<send event="wait off seconds_t_0_timeEvent_0" delayexpr="(this_checkingall == 2 ? conf_TemperatureOffSeconds : conf_OffSeconds) * 1000"/>
+			</onentry>
+			<onexit>
+				<cancel sendid="wait off seconds_t_0_timeEvent_0" />
+			</onexit>
+			<onentry>
+				 <assign location="this_index" expr="0"/>
+			</onentry>
+			<transition event ="vector"  type="internal" >
+				 <assign location="this_index" expr="0"/>
+			</transition>
+			<transition event ="fieldlist.Heaters_foreach"  type="internal" >
+				 <assign location="fieldlist_Heaters_onoff" expr="this_index == this_samplingindex ? 0.0 : fieldlist_Heaters_onoff"/>
+				 <assign location="this_index" expr="this_index + 1"/>
+			</transition>
+			<transition event="wait off seconds_t_0_timeEvent_0"  target="check_temperature">
+			</transition>
+		</state>
+		<state id="start_temperature_check">
+			<onentry>
+				 <assign location="this_samplingindex" expr="-1"/>
+				 <assign location="this_checkingall" expr="2"/>
+			</onentry>
+			<transition   target="move_to_next_heater">
+			</transition>
+		</state>
+		<state id="check_temperature">
+			<onentry>
+				 <assign location="this_index" expr="0"/>
+			</onentry>
+			<transition event ="fieldlist.Heaters_foreach"  type="internal" >
+				 <assign location="fieldlist_Heaters_onoff" expr="this_index == this_samplingindex ? 0.0 : fieldlist_Heaters_onoff"/>
+				 <assign location="this_fieldlist_Heaters_low_heating_error" expr="this_index == this_samplingindex &amp;&amp; this_checkingall == 2 ? (fieldlist_Heaters_degC &gt; this_temperaturetarget ? 0.0 : 1.0) : this_fieldlist_Heaters_low_heating_error"/>
+				 <assign location="this_fieldlist_Heaters_currentsampled" expr="this_index == this_samplingindex &amp;&amp; this_checkingall == 2 &amp;&amp; this_fieldlist_Heaters_low_heating_error == 1 ? -3 : this_fieldlist_Heaters_currentsampled"/>
+				 <assign location="this_index" expr="this_index + 1"/>
+			</transition>
+			<transition event="vector"  target="move_to_next_heater">
+			</transition>
+		</state>
+	</state>
+</scxml>

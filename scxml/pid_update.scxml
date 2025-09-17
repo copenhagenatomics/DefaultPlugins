@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" datamodel="ecmascript" name="pid_update">
+	<datamodel>
+		<data expr="0.0" id="pid_proportionalGain" />
+		<data expr="0.0" id="pid_controlPeriod" />
+		<data expr="0.0" id="pid_integralTime" />
+		<data expr="0.0" id="pid_derivativeTime" />
+		<data expr="0.0" id="pid_trackingTime" />
+		<data expr="0.0" id="pid_minOutput" />
+		<data expr="0.0" id="pid_maxOutput" />
+	</datamodel>
+	<state id="mainregion">
+		<initial>
+			<transition target="listening_to_live_updates" type="internal">
+			</transition>
+		</initial>
+		<state id="listening_to_live_updates">
+			<transition event="pid_update.proportionalGain"  target="setpgain">
+			</transition>
+			<transition event="pid_update.controlPeriod"  target="setperiod">
+			</transition>
+			<transition event="pid_update.integralTime"  target="setintegral">
+			</transition>
+			<transition event="pid_update.derivativeTime"  target="setderivative">
+			</transition>
+			<transition event="pid_update.trackingTime"  target="settracking">
+			</transition>
+			<transition event="pid_update.minOutput"  target="setminoutput">
+			</transition>
+			<transition event="pid_update.maxOutput"  target="setmaxoutput">
+			</transition>
+		</state>
+		<state id="setpgain">
+			<onentry>
+				 <assign location="pid_proportionalGain" expr="_event.data"/>
+			</onentry>
+			<transition   target="listening_to_live_updates">
+			</transition>
+		</state>
+		<state id="setperiod">
+			<onentry>
+				 <assign location="pid_controlPeriod" expr="_event.data"/>
+			</onentry>
+			<transition   target="listening_to_live_updates">
+			</transition>
+		</state>
+		<state id="setintegral">
+			<onentry>
+				 <assign location="pid_integralTime" expr="_event.data"/>
+			</onentry>
+			<transition   target="listening_to_live_updates">
+			</transition>
+		</state>
+		<state id="setderivative">
+			<onentry>
+				 <assign location="pid_derivativeTime" expr="_event.data"/>
+			</onentry>
+			<transition   target="listening_to_live_updates">
+			</transition>
+		</state>
+		<state id="settracking">
+			<onentry>
+				 <assign location="pid_trackingTime" expr="_event.data"/>
+			</onentry>
+			<transition   target="listening_to_live_updates">
+			</transition>
+		</state>
+		<state id="setminoutput">
+			<onentry>
+				 <assign location="pid_minOutput" expr="_event.data"/>
+			</onentry>
+			<transition   target="listening_to_live_updates">
+			</transition>
+		</state>
+		<state id="setmaxoutput">
+			<onentry>
+				 <assign location="pid_maxOutput" expr="_event.data"/>
+			</onentry>
+			<transition   target="listening_to_live_updates">
+			</transition>
+		</state>
+	</state>
+</scxml>
