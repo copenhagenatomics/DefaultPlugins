@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" datamodel="ecmascript" name="pid">
+	<datamodel>
+		<data expr="0.0" id="input" />
+		<data expr="0.0" id="output" />
+		<data expr="0.0" id="target" />
+		<data expr="0.1" id="conf_proportionalGain" />
+		<data expr="600.0" id="conf_integralTime" />
+		<data expr="0.0" id="conf_derivativeTime" />
+		<data expr="20" id="conf_controlPeriod" />
+		<data expr="40" id="conf_trackingTime" />
+		<data expr="0.0" id="conf_minOutput" />
+		<data expr="0.0" id="conf_maxOutput" />
+		<data expr="0.0" id="pid_known_state" />
+		<data expr="0" id="pid_pidoperation" />
+		<data expr="0.0" id="pid_proportionalGain" />
+		<data expr="0.0" id="pid_controlPeriod" />
+		<data expr="0.0" id="pid_integralTime" />
+		<data expr="0.0" id="pid_derivativeTime" />
+		<data expr="0.0" id="pid_trackingTime" />
+		<data expr="0.0" id="pid_minOutput" />
+		<data expr="0.0" id="pid_maxOutput" />
+		<data expr="0.0" id="pid_u0" />
+		<data expr="0.0" id="pid_errorValue" />
+		<data expr="0.0" id="pid_errorminus1" />
+		<data expr="0.0" id="pid_P" />
+		<data expr="0.0" id="pid_I" />
+		<data expr="0.0" id="pid_D" />
+		<data expr="0.0" id="pid_u0Percentage" />
+		<data expr="0.0" id="pid_controlValue" />
+		<data expr="0.0" id="pid_buffer_output" />
+	</datamodel>
+	<state id="mainregion">
+		<initial>
+			<transition target="check_config" type="internal">
+			</transition>
+		</initial>
+		<state id="check_config">
+			<onentry>
+				 <assign location="pid_known_state" expr="1.0"/>
+				 <assign location="pid_proportionalGain" expr="conf_proportionalGain"/>
+				 <assign location="pid_controlPeriod" expr="conf_controlPeriod"/>
+				 <assign location="pid_integralTime" expr="conf_integralTime"/>
+				 <assign location="pid_derivativeTime" expr="conf_derivativeTime"/>
+				 <assign location="pid_trackingTime" expr="conf_trackingTime"/>
+				 <assign location="pid_minOutput" expr="conf_minOutput"/>
+				 <assign location="pid_maxOutput" expr="conf_maxOutput"/>
+				 <assign location="pid_u0" expr="conf_minOutput"/>
+			</onentry>
+			<transition   target="init">
+			</transition>
+		</state>
+		<state id="off">
+			<onentry>
+				 <assign location="pid_known_state" expr="3.0"/>
+			</onentry>
+			<transition event ="vector"  type="internal" >
+				 <assign location="output" expr="0.0"/>
+			</transition>
+			<transition  cond="target != 0.0" target="operation">
+			</transition>
+		</state>
+		<state id="init">
+			<onentry>
+				 <assign location="pid_known_state" expr="2.0"/>
+			</onentry>
+			<transition   target="off">
+			</transition>
+		</state>
+		<state id="alert_ack">
+			<onentry>
+				 <assign location="pid_known_state" expr="-5.0"/>
+			</onentry>
+			<transition event ="vector"  type="internal" >
+				 <assign location="output" expr="0.0"/>
+			</transition>
+			<transition event="ack"  target="off">
+			</transition>
+		</state>
+		<state id="operation">
+			<onentry>
+				 <assign location="pid_known_state" expr="4.0"/>
+				 <assign location="pid_pidoperation" expr="1"/>
+			</onentry>
+			<onexit>
+				 <assign location="output" expr="0.0"/>
+				 <assign location="pid_pidoperation" expr="0"/>
+				 <assign location="pid_errorValue" expr="0"/>
+				 <assign location="pid_errorminus1" expr="0"/>
+				 <assign location="pid_P" expr="0"/>
+				 <assign location="pid_I" expr="0"/>
+				 <assign location="pid_D" expr="0"/>
+				 <assign location="pid_u0Percentage" expr="0"/>
+				 <assign location="pid_controlValue" expr="0"/>
+				 <assign location="pid_buffer_output" expr="0"/>
+			</onexit>
+			<initial>
+				<transition target="calculate_values" type="internal">
+				</transition>
+			</initial>
+			<state id="calculate_values">
+				<onentry>
+					<send event="calculate_values_t_0_timeEvent_0" delayexpr="conf_controlPeriod * 1000"/>
+				</onentry>
+				<onexit>
+					<cancel sendid="calculate_values_t_0_timeEvent_0" />
+				</onexit>
+				<onentry>
+					 <assign location="pid_known_state" expr="4.1"/>
+					 <assign location="pid_controlPeriod" expr="pid_controlPeriod &gt;= 0.1 ? pid_controlPeriod : 0.1"/>
+					 <assign location="pid_integralTime" expr="pid_integralTime &gt;= 0.1 ? pid_integralTime : 0.1"/>
+					 <assign location="pid_trackingTime" expr="pid_trackingTime &gt;= 0.1 ? pid_trackingTime : 0.1"/>
+					 <assign location="pid_u0Percentage" expr="((pid_u0 - pid_minOutput) / (pid_maxOutput - pid_minOutput)) * 100.0"/>
+					 <assign location="pid_errorminus1" expr="pid_errorValue"/>
+					 <assign location="pid_errorValue" expr="target - input"/>
+					 <assign location="pid_P" expr="pid_proportionalGain * pid_errorValue"/>
+					 <assign location="pid_I" expr="pid_I + (pid_proportionalGain * pid_controlPeriod / pid_integralTime) * pid_errorValue"/>
+					 <assign location="pid_D" expr="((pid_proportionalGain * pid_derivativeTime) / pid_controlPeriod) * (pid_errorValue - pid_errorminus1)"/>
+					 <assign location="pid_controlValue" expr="pid_u0Percentage + pid_P + pid_I + pid_D"/>
+					 <assign location="pid_I" expr="pid_controlValue &gt; 100.0 ? pid_I - ((pid_controlValue - 100.0) * pid_controlPeriod / pid_trackingTime) : pid_I"/>
+					 <assign location="pid_I" expr="pid_controlValue &lt; 0.0 ? pid_I - (pid_controlValue * pid_controlPeriod / pid_trackingTime) : pid_I"/>
+					 <assign location="pid_controlValue" expr="pid_u0Percentage + pid_P + pid_I + pid_D"/>
+					 <assign location="pid_buffer_output" expr="pid_minOutput + (pid_maxOutput - pid_minOutput) * pid_controlValue / 100.0"/>
+					 <assign location="pid_buffer_output" expr="pid_buffer_output &gt; pid_maxOutput ? pid_maxOutput : pid_buffer_output"/>
+					 <assign location="pid_buffer_output" expr="pid_buffer_output &lt; pid_minOutput ? pid_minOutput : pid_buffer_output"/>
+					 <assign location="output" expr="pid_buffer_output"/>
+				</onentry>
+				<transition event ="vector"  type="internal" >
+					 <assign location="output" expr="pid_buffer_output"/>
+				</transition>
+				<transition event="calculate_values_t_0_timeEvent_0"  target="trigger_next_period">
+				</transition>
+			</state>
+			<state id="trigger_next_period">
+				<transition   target="calculate_values">
+				</transition>
+			</state>
+			<transition  cond="target == 0.0" target="off">
+			</transition>
+			<transition event="emergencyshutdown"  target="alert_ack">
+			</transition>
+		</state>
+	</state>
+</scxml>

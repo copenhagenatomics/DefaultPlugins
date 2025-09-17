@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" datamodel="ecmascript" name="hw_lightbulb">
+	<datamodel>
+		<data expr="0.0" id="light_onoff" />
+		<data expr="499" id="conf_onTime" />
+		<data expr="499" id="conf_offTime" />
+		<data expr="0" id="conf_normalOn" />
+		<data expr="0" id="hw_lightbulb_onTime" />
+		<data expr="0" id="hw_lightbulb_offTime" />
+		<data expr="false" id="hw_lightbulb_onoff" />
+		<data expr="false" id="hw_lightbulb_blink" />
+	</datamodel>
+	<state id="main_region">
+		<initial>
+			<transition target="init" type="internal">
+			</transition>
+		</initial>
+		<state id="init">
+			<onentry>
+				 <assign location="hw_lightbulb_onTime" expr="conf_onTime"/>
+				 <assign location="hw_lightbulb_offTime" expr="conf_offTime"/>
+			</onentry>
+			<transition   target="idle">
+			</transition>
+		</state>
+		<state id="idle">
+			<onentry>
+				 <assign location="light_onoff" expr="conf_normalOn"/>
+			</onentry>
+			<transition event ="vector"  type="internal" >
+				 <assign location="light_onoff" expr="conf_normalOn"/>
+			</transition>
+			<transition  cond="hw_lightbulb_onoff" target="light_activated">
+			</transition>
+		</state>
+		<state id="light_activated">
+			<initial>
+				<transition target="light_constant" type="internal">
+				</transition>
+			</initial>
+			<state id="light_constant">
+				<onentry>
+					 <assign location="light_onoff" expr="conf_normalOn == 0 ? 1 : 0"/>
+				</onentry>
+				<transition event ="vector"  type="internal" >
+					 <assign location="light_onoff" expr="conf_normalOn == 0 ? 1 : 0"/>
+				</transition>
+				<transition  cond="hw_lightbulb_blink" target="light_blinking">
+				</transition>
+			</state>
+			<state id="light_blinking">
+				<initial>
+					<transition target="blink_on" type="internal">
+					</transition>
+				</initial>
+				<state id="blink_on">
+					<onentry>
+						<send event="blink_on_t_0_timeEvent_0" delayexpr="hw_lightbulb_onTime"/>
+					</onentry>
+					<onexit>
+						<cancel sendid="blink_on_t_0_timeEvent_0" />
+					</onexit>
+					<onentry>
+						 <assign location="light_onoff" expr="1"/>
+					</onentry>
+					<transition event ="vector"  type="internal" >
+						 <assign location="light_onoff" expr="1"/>
+					</transition>
+					<transition event="blink_on_t_0_timeEvent_0"  target="blink_off">
+					</transition>
+				</state>
+				<state id="blink_off">
+					<onentry>
+						<send event="blink_off_t_0_timeEvent_0" delayexpr="hw_lightbulb_offTime"/>
+					</onentry>
+					<onexit>
+						<cancel sendid="blink_off_t_0_timeEvent_0" />
+					</onexit>
+					<onentry>
+						 <assign location="light_onoff" expr="0"/>
+					</onentry>
+					<transition event ="vector"  type="internal" >
+						 <assign location="light_onoff" expr="0"/>
+					</transition>
+					<transition event="blink_off_t_0_timeEvent_0"  target="blink_on">
+					</transition>
+				</state>
+				<transition  cond="!hw_lightbulb_blink" target="light_constant">
+				</transition>
+			</state>
+			<transition  cond="!hw_lightbulb_onoff" target="idle">
+			</transition>
+		</state>
+	</state>
+</scxml>

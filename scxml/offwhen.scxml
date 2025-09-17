@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" datamodel="ecmascript" name="offwhen">
+	<datamodel>
+		<data expr="0.0" id="condition" />
+		<data expr="0.0" id="target" />
+		<data expr="0.0" id="conf_offvalue" />
+		<data expr="false" id="offwhen_forcedoff_error" />
+	</datamodel>
+	<state id="main_region">
+		<initial>
+			<transition target="idle" type="internal">
+			</transition>
+		</initial>
+		<state id="idle">
+			<transition  cond="condition == 1.0 &amp;&amp; target != conf_offvalue" target="forcedoff">
+			</transition>
+		</state>
+		<state id="forcedoff">
+			<onentry>
+				 <assign location="target" expr="conf_offvalue"/>
+				 <assign location="offwhen_forcedoff_error" expr="true"/>
+			</onentry>
+			<transition event ="vector"  type="internal" >
+				 <assign location="target" expr="conf_offvalue"/>
+			</transition>
+			<onexit>
+				 <assign location="offwhen_forcedoff_error" expr="false"/>
+			</onexit>
+			<transition  cond="condition != 1.0" target="idle">
+			</transition>
+		</state>
+	</state>
+</scxml>

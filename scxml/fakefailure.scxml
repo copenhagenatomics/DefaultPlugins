@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" datamodel="ecmascript" name="fakefailure">
+	<datamodel>
+		<data expr="0.0" id="target" />
+		<data expr="false" id="fakefailure_failing" />
+		<data expr="0.0" id="conf_index" />
+		<data expr="0.0" id="conf_offValue" />
+	</datamodel>
+	<state id="main_region">
+		<initial>
+			<transition target="idle" type="internal">
+			</transition>
+		</initial>
+		<state id="idle">
+			<transition event="fail"  target="check_fail_index_matches">
+			</transition>
+		</state>
+		<state id="check_fail_index_matches">
+			<onentry>
+				 <assign location="fakefailure_failing" expr="_event.data == conf_index"/>
+			</onentry>
+			<transition  cond="fakefailure_failing" target="simulating_failure">
+			</transition>
+			<transition  cond="!fakefailure_failing" target="idle">
+			</transition>
+		</state>
+		<state id="simulating_failure">
+			<onentry>
+				 <assign location="target" expr="conf_offValue"/>
+			</onentry>
+			<transition event ="vector"  type="internal" >
+				 <assign location="target" expr="conf_offValue"/>
+			</transition>
+			<transition event="work"  target="check_work_index_matches">
+			</transition>
+		</state>
+		<state id="check_work_index_matches">
+			<onentry>
+				 <assign location="fakefailure_failing" expr="_event.data != conf_index"/>
+			</onentry>
+			<transition  cond="fakefailure_failing" target="simulating_failure">
+			</transition>
+			<transition  cond="!fakefailure_failing" target="idle">
+			</transition>
+		</state>
+	</state>
+</scxml>
