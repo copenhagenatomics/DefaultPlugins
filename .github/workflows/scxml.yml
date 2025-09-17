@@ -10,4 +10,8 @@ on:
 jobs:
   call-scxml:
     uses: copenhagenatomics/BasePlugins/.github/workflows/scxml.yml@main
-    secrets: inherit
+    with:
+      BLOB_URL: ${{ vars.BLOB_URL }}
+    secrets:
+      BLOB_QUERYSTRING: ${{ secrets.BLOB_QUERYSTRING }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
