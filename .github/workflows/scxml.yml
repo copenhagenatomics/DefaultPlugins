@@ -13,4 +13,5 @@ jobs:
     with:
       BLOB_URL: ${{ vars.BLOB_URL }}
     secrets:
+      BLOB_QUERYSTRING: ${{ secrets.BLOB_QUERYSTRING }}
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
