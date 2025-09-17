@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" datamodel="ecmascript" name="LightTest">
+	<datamodel>
+		<data expr="0" id="LED_color" />
+		<data expr="0.0" id="LightTest_KnownState" />
+	</datamodel>
+	<state id="main_region">
+		<initial>
+			<transition target="idle" type="internal">
+			</transition>
+		</initial>
+		<state id="idle">
+			<onentry>
+				 <assign location="LED_color" expr="0x0"/>
+				 <assign location="LightTest_KnownState" expr="1.0"/>
+			</onentry>
+			<transition event="LonelyForest"  target="testing">
+			</transition>
+		</state>
+		<state id="testing">
+			<initial>
+				<transition target="Red" type="internal">
+				</transition>
+			</initial>
+			<state id="Red">
+				<onentry>
+					<send event="Red_t_0_timeEvent_0" delay="417ms"/>
+				</onentry>
+				<onexit>
+					<cancel sendid="Red_t_0_timeEvent_0" />
+				</onexit>
+				<onentry>
+					 <assign location="LED_color" expr="0xff0000"/>
+					 <assign location="LightTest_KnownState" expr="2.0"/>
+				</onentry>
+				<onexit>
+					 <assign location="LED_color" expr="0x0"/>
+				</onexit>
+				<transition event="Red_t_0_timeEvent_0"  target="Blue">
+				</transition>
+			</state>
+			<state id="Blue">
+				<onentry>
+					<send event="Blue_t_0_timeEvent_0" delay="417ms"/>
+				</onentry>
+				<onexit>
+					<cancel sendid="Blue_t_0_timeEvent_0" />
+				</onexit>
+				<onentry>
+					 <assign location="LED_color" expr="0xff"/>
+					 <assign location="LightTest_KnownState" expr="2.1"/>
+				</onentry>
+				<transition event="Blue_t_0_timeEvent_0"  target="pink">
+				</transition>
+			</state>
+			<state id="Green">
+				<onentry>
+					<send event="Green_t_0_timeEvent_0" delay="417ms"/>
+				</onentry>
+				<onexit>
+					<cancel sendid="Green_t_0_timeEvent_0" />
+				</onexit>
+				<onentry>
+					 <assign location="LED_color" expr="0xff00"/>
+					 <assign location="LightTest_KnownState" expr="2.2"/>
+				</onentry>
+				<transition event="Green_t_0_timeEvent_0"  target="Red">
+				</transition>
+			</state>
+			<state id="pink">
+				<onentry>
+					<send event="pink_t_0_timeEvent_0" delay="417ms"/>
+				</onentry>
+				<onexit>
+					<cancel sendid="pink_t_0_timeEvent_0" />
+				</onexit>
+				<onentry>
+					 <assign location="LED_color" expr="0xf5429b"/>
+					 <assign location="LightTest_KnownState" expr="2.3"/>
+				</onentry>
+				<transition event="pink_t_0_timeEvent_0"  target="Green">
+				</transition>
+			</state>
+			<transition event="stop"  target="idle">
+			</transition>
+		</state>
+	</state>
+</scxml>
