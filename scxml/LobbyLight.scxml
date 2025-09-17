@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" datamodel="ecmascript" name="LobbyLight">
+	<datamodel>
+		<data expr="0.0" id="temperature_tm01_01" />
+		<data expr="0" id="light_lc01_color" />
+		<data expr="0" id="light_lc02_color" />
+		<data expr="0" id="valve_dc01_02_onoff" />
+		<data expr="0" id="LobbyLight_hue" />
+		<data expr="0" id="LobbyLight_r" />
+		<data expr="0" id="LobbyLight_g" />
+		<data expr="0" id="LobbyLight_b" />
+		<data expr="0" id="LobbyLight_x" />
+		<data expr="22" id="conf_mintemp" />
+		<data expr="33" id="conf_maxtemp" />
+	</datamodel>
+	<state id="main_region">
+		<initial>
+			<transition target="Fan_Off" type="internal">
+			</transition>
+		</initial>
+		<state id="Fan_Off">
+			<transition event ="vector"  type="internal" >
+				 <assign location="LobbyLight_hue" expr="temperature_tm01_01 &gt;= conf_mintemp &amp;&amp; temperature_tm01_01 &lt;= conf_maxtemp ? Math.floor((240 - ((240 / (conf_maxtemp - conf_mintemp)) * (temperature_tm01_01 - conf_mintemp)))) : (temperature_tm01_01 &gt; 40 || temperature_tm01_01 &lt; 5 ? LobbyLight_hue : 0)"/>
+				 <assign location="LobbyLight_x" expr="255 * (LobbyLight_hue % 60) / 60"/>
+				 <assign location="LobbyLight_r" expr="(LobbyLight_hue &gt;= 0 &amp;&amp; LobbyLight_hue &lt; 60) ? 255 : (LobbyLight_hue &gt;= 60 &amp;&amp; LobbyLight_hue &lt; 120 ? 255 - LobbyLight_x : (LobbyLight_hue &gt;= 120 &amp;&amp; LobbyLight_hue &lt; 180 ? 0 : (LobbyLight_hue &gt;= 180 &amp;&amp; LobbyLight_hue &lt; 240 ? 0 : 255)))"/>
+				 <assign location="LobbyLight_g" expr="(LobbyLight_hue &gt;= 0 &amp;&amp; LobbyLight_hue &lt; 60) ? LobbyLight_x : (LobbyLight_hue &gt;= 60 &amp;&amp; LobbyLight_hue &lt; 120 ? 255 : (LobbyLight_hue &gt;= 120 &amp;&amp; LobbyLight_hue &lt; 180 ? 255 : (LobbyLight_hue &gt;= 180 &amp;&amp; LobbyLight_hue &lt; 240 ? 255 - LobbyLight_x : 0)))"/>
+				 <assign location="LobbyLight_b" expr="(LobbyLight_hue &gt;= 0 &amp;&amp; LobbyLight_hue &lt; 60) ? 0 : (LobbyLight_hue &gt;= 60 &amp;&amp; LobbyLight_hue &lt; 120 ? 0 : (LobbyLight_hue &gt;= 120 &amp;&amp; LobbyLight_hue &lt; 180 ? LobbyLight_x : (LobbyLight_hue &gt;= 180 &amp;&amp; LobbyLight_hue &lt; 240 ? 255 : 0)))"/>
+				 <assign location="light_lc01_color" expr="(LobbyLight_b + (LobbyLight_g * 256) + (LobbyLight_r * 256 * 256))"/>
+				 <assign location="light_lc02_color" expr="(LobbyLight_b + (LobbyLight_g * 256) + (LobbyLight_r * 256 * 256))"/>
+			</transition>
+			<transition event="emergencyshutdown"  target="Fan_On">
+			</transition>
+		</state>
+		<state id="Fan_On">
+			<onentry>
+				<send event="Fan On_t_0_timeEvent_0" delay="120s"/>
+			</onentry>
+			<onexit>
+				<cancel sendid="Fan On_t_0_timeEvent_0" />
+			</onexit>
+			<transition event ="vector"  type="internal" >
+				 <assign location="LobbyLight_hue" expr="temperature_tm01_01 &gt;= conf_mintemp &amp;&amp; temperature_tm01_01 &lt;= conf_maxtemp ? Math.floor((240 - ((240 / (conf_maxtemp - conf_mintemp)) * (temperature_tm01_01 - conf_mintemp)))) : 300"/>
+				 <assign location="LobbyLight_x" expr="255 * (LobbyLight_hue % 60) / 60"/>
+				 <assign location="LobbyLight_r" expr="(LobbyLight_hue &gt;= 0 &amp;&amp; LobbyLight_hue &lt; 60) ? 255 : (LobbyLight_hue &gt;= 60 &amp;&amp; LobbyLight_hue &lt; 120 ? 255 - LobbyLight_x : (LobbyLight_hue &gt;= 120 &amp;&amp; LobbyLight_hue &lt; 180 ? 0 : (LobbyLight_hue &gt;= 180 &amp;&amp; LobbyLight_hue &lt; 240 ? 0 : 255)))"/>
+				 <assign location="LobbyLight_g" expr="(LobbyLight_hue &gt;= 0 &amp;&amp; LobbyLight_hue &lt; 60) ? LobbyLight_x : (LobbyLight_hue &gt;= 60 &amp;&amp; LobbyLight_hue &lt; 120 ? 255 : (LobbyLight_hue &gt;= 120 &amp;&amp; LobbyLight_hue &lt; 180 ? 255 : (LobbyLight_hue &gt;= 180 &amp;&amp; LobbyLight_hue &lt; 240 ? 255 - LobbyLight_x : 0)))"/>
+				 <assign location="LobbyLight_b" expr="(LobbyLight_hue &gt;= 0 &amp;&amp; LobbyLight_hue &lt; 60) ? 0 : (LobbyLight_hue &gt;= 60 &amp;&amp; LobbyLight_hue &lt; 120 ? 0 : (LobbyLight_hue &gt;= 120 &amp;&amp; LobbyLight_hue &lt; 180 ? LobbyLight_x : (LobbyLight_hue &gt;= 180 &amp;&amp; LobbyLight_hue &lt; 240 ? 255 : 0)))"/>
+				 <assign location="light_lc01_color" expr="(LobbyLight_b + (LobbyLight_g * 256) + (LobbyLight_r * 256 * 256))"/>
+				 <assign location="light_lc02_color" expr="(LobbyLight_b + (LobbyLight_g * 256) + (LobbyLight_r * 256 * 256))"/>
+				 <assign location="valve_dc01_02_onoff" expr="100"/>
+			</transition>
+			<transition event="Fan On_t_0_timeEvent_0"  target="Fan_Off">
+			</transition>
+		</state>
+	</state>
+</scxml>
