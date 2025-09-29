@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" datamodel="ecmascript" name="demoplugin1">
+	<datamodel>
+		<data expr="0.0" id="oxygen" />
+		<data expr="0.0" id="temperature1" />
+		<data expr="0.0" id="tankin_flow" />
+		<data expr="0.0" id="ovenarea1_target" />
+		<data expr="0.0" id="mypump_targetrpm" />
+		<data expr="0.0" id="light_color" />
+		<data expr="0.5" id="conf_maxoxygen" />
+		<data expr="" id="conf_primemedium" />
+		<data expr="0.0" id="demoplugin1_meltingpoint" />
+	</datamodel>
+	<state id="main_region">
+		<initial>
+			<transition target="check_config" type="internal">
+			</transition>
+		</initial>
+		<state id="Off">
+			<onentry>
+				 <assign location="tankin_flow" expr="0"/>
+				 <assign location="ovenarea1_target" expr="0"/>
+				 <assign location="mypump_targetrpm" expr="0"/>
+			</onentry>
+			<transition event="run"  target="running">
+			</transition>
+		</state>
+		<state id="running">
+			<initial>
+				<transition target="removeoxygen" type="internal">
+				</transition>
+			</initial>
+			<state id="removeoxygen">
+				<onentry>
+					 <assign location="tankin_flow" expr="50"/>
+				</onentry>
+				<transition event ="vector"  type="internal" >
+					 <assign location="tankin_flow" expr="50"/>
+				</transition>
+				<transition  cond="oxygen &lt; conf_maxoxygen" target="meltsalt">
+				</transition>
+			</state>
+			<state id="meltsalt">
+				<onentry>
+					 <assign location="ovenarea1_target" expr="demoplugin1_meltingpoint + 100"/>
+					 <assign location="tankin_flow" expr="5"/>
+				</onentry>
+				<transition  cond="temperature1 &gt; demoplugin1_meltingpoint" target="pump_salt">
+				</transition>
+			</state>
+			<state id="pump_salt">
+				<onentry>
+					 <assign location="mypump_targetrpm" expr="2000"/>
+				</onentry>
+			</state>
+			<transition event="stop"  target="Off">
+			</transition>
+			<transition event="emergencyshutdown"  target="Off">
+			</transition>
+		</state>
+		<state id="check_config">
+			<transition  cond="conf_maxoxygen &lt;= 0" target="invalidconfig">
+			</transition>
+			<transition  cond="conf_maxoxygen &gt;= 5" target="invalidconfig">
+			</transition>
+			<transition  cond="conf_primemedium == 'flinak'" target="flinak">
+			</transition>
+			<transition  cond="conf_primemedium == 'nitrate'" target="nitrate">
+			</transition>
+			<transition  cond="conf_primemedium == 'water'" target="water">
+			</transition>
+			<transition event="vector"  target="invalidconfig">
+			</transition>
+		</state>
+		<state id="flinak">
+			<onentry>
+				 <assign location="demoplugin1_meltingpoint" expr="475"/>
+			</onentry>
+			<transition   target="Off">
+			</transition>
+		</state>
+		<state id="nitrate">
+			<onentry>
+				 <assign location="demoplugin1_meltingpoint" expr="275"/>
+			</onentry>
+			<transition   target="Off">
+			</transition>
+		</state>
+		<state id="water">
+			<onentry>
+				 <assign location="demoplugin1_meltingpoint" expr="0"/>
+			</onentry>
+			<transition   target="Off">
+			</transition>
+		</state>
+		<state id="invalidconfig">
+		</state>
+	</state>
+</scxml>

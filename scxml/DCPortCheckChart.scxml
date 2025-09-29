@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" datamodel="ecmascript" name="DCPortCheckChart">
+	<datamodel>
+		<data expr="0.0" id="valve_dc01_01_onoff" />
+		<data expr="0.0" id="valve_dc01_02_onoff" />
+		<data expr="0.0" id="valve_dc01_03_onoff" />
+		<data expr="0.0" id="valve_dc01_04_onoff" />
+		<data expr="0.0" id="valve_dc01_05_onoff" />
+		<data expr="0.0" id="valve_dc01_06_onoff" />
+		<data expr="0.0" id="valve_dc01_07_onoff" />
+	</datamodel>
+	<state id="main_region">
+		<initial>
+			<transition target="Waiting" type="internal">
+			</transition>
+		</initial>
+		<state id="Port_1_On">
+			<onentry>
+				<send event="Port 1 On_t_0_timeEvent_0" delay="1s"/>
+			</onentry>
+			<onexit>
+				<cancel sendid="Port 1 On_t_0_timeEvent_0" />
+			</onexit>
+			<onentry>
+				 <assign location="valve_dc01_01_onoff" expr="1"/>
+			</onentry>
+			<transition event="Port 1 On_t_0_timeEvent_0"  target="Port_2_On">
+			</transition>
+		</state>
+		<state id="Port_2_On">
+			<onentry>
+				<send event="Port 2 On_t_0_timeEvent_0" delay="1s"/>
+			</onentry>
+			<onexit>
+				<cancel sendid="Port 2 On_t_0_timeEvent_0" />
+			</onexit>
+			<onentry>
+				 <assign location="valve_dc01_02_onoff" expr="1"/>
+			</onentry>
+			<transition event="Port 2 On_t_0_timeEvent_0"  target="Port_3_On">
+			</transition>
+		</state>
+		<state id="Port_3_On">
+			<onentry>
+				<send event="Port 3 On_t_0_timeEvent_0" delay="1s"/>
+			</onentry>
+			<onexit>
+				<cancel sendid="Port 3 On_t_0_timeEvent_0" />
+			</onexit>
+			<onentry>
+				 <assign location="valve_dc01_03_onoff" expr="1"/>
+			</onentry>
+			<transition event="Port 3 On_t_0_timeEvent_0"  target="Port_4_On">
+			</transition>
+		</state>
+		<state id="Port_4_On">
+			<onentry>
+				<send event="Port 4 On_t_0_timeEvent_0" delay="1s"/>
+			</onentry>
+			<onexit>
+				<cancel sendid="Port 4 On_t_0_timeEvent_0" />
+			</onexit>
+			<onentry>
+				 <assign location="valve_dc01_04_onoff" expr="1"/>
+			</onentry>
+			<transition event="Port 4 On_t_0_timeEvent_0"  target="Port_5_On">
+			</transition>
+		</state>
+		<state id="Port_5_On">
+			<onentry>
+				<send event="Port 5 On_t_0_timeEvent_0" delay="1s"/>
+			</onentry>
+			<onexit>
+				<cancel sendid="Port 5 On_t_0_timeEvent_0" />
+			</onexit>
+			<onentry>
+				 <assign location="valve_dc01_05_onoff" expr="1"/>
+			</onentry>
+			<transition event="Port 5 On_t_0_timeEvent_0"  target="Port_6_On">
+			</transition>
+		</state>
+		<state id="Port_6_On">
+			<onentry>
+				<send event="Port 6 On_t_0_timeEvent_0" delay="1s"/>
+			</onentry>
+			<onexit>
+				<cancel sendid="Port 6 On_t_0_timeEvent_0" />
+			</onexit>
+			<onentry>
+				 <assign location="valve_dc01_06_onoff" expr="1"/>
+			</onentry>
+			<transition event="Port 6 On_t_0_timeEvent_0"  target="Port_7_On">
+			</transition>
+		</state>
+		<state id="Port_7_On">
+			<onentry>
+				<send event="Port 7 On_t_0_timeEvent_0" delay="1s"/>
+			</onentry>
+			<onexit>
+				<cancel sendid="Port 7 On_t_0_timeEvent_0" />
+			</onexit>
+			<onentry>
+				 <assign location="valve_dc01_07_onoff" expr="1"/>
+			</onentry>
+			<transition event="Port 7 On_t_0_timeEvent_0"  target="All_Off">
+			</transition>
+		</state>
+		<state id="All_Off">
+			<onentry>
+				 <assign location="valve_dc01_01_onoff" expr="0"/>
+				 <assign location="valve_dc01_02_onoff" expr="0"/>
+				 <assign location="valve_dc01_03_onoff" expr="0"/>
+				 <assign location="valve_dc01_04_onoff" expr="0"/>
+				 <assign location="valve_dc01_05_onoff" expr="0"/>
+				 <assign location="valve_dc01_06_onoff" expr="0"/>
+				 <assign location="valve_dc01_07_onoff" expr="0"/>
+			</onentry>
+			<transition   target="Waiting">
+			</transition>
+		</state>
+		<state id="Waiting">
+			<transition event="start"  target="Port_1_On">
+			</transition>
+		</state>
+	</state>
+</scxml>

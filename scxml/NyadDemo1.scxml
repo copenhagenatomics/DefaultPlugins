@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" datamodel="ecmascript" name="NyadDemo1">
+	<datamodel>
+		<data expr="0.0" id="temperature_tm01_10" />
+		<data expr="0" id="hue" />
+		<data expr="0" id="r" />
+		<data expr="0" id="g" />
+		<data expr="0" id="b" />
+		<data expr="0" id="x" />
+		<data expr="0" id="light_lc01_color" />
+	</datamodel>
+	<state id="main_region">
+		<initial>
+			<transition target="color_changer" type="internal">
+			</transition>
+		</initial>
+		<state id="color_changer">
+			<transition event ="vector"  type="internal" >
+				 <assign location="hue" expr="temperature_tm01_10 &gt;= 15 &amp;&amp; temperature_tm01_10 &lt;= 36 ? Math.floor((330 - ((330 / (36 - 15)) * (temperature_tm01_10 - 15)))) : 0"/>
+				 <assign location="x" expr="255 * (hue % 60) / 60"/>
+				 <assign location="r" expr="(hue &gt; 0 &amp;&amp; hue &lt; 30) ? 255 : (hue &gt;= 30 &amp;&amp; hue &lt; 60 ? 255 : (hue &gt;= 60 &amp;&amp; hue &lt; 120 ? 255 - x : (hue &gt;= 120 &amp;&amp; hue &lt; 180 ? 0 : (hue &gt;= 180 &amp;&amp; hue &lt; 240 ? 0 : (hue &gt;= 240 &amp;&amp; hue &lt; 300 ? x : (hue &gt;= 300 &amp;&amp; hue &lt; 330 ? 255 : 0))))))"/>
+				 <assign location="g" expr="(hue &gt; 0 &amp;&amp; hue &lt; 30) ? 0 : (hue &gt;= 30 &amp;&amp; hue &lt; 60 ? x : (hue &gt;= 60 &amp;&amp; hue &lt; 120 ? 255 : (hue &gt;= 120 &amp;&amp; hue &lt; 180 ? 255 : (hue &gt;= 180 &amp;&amp; hue &lt; 240 ? 255 - x : (hue &gt;= 240 &amp;&amp; hue &lt; 300 ? 0 : (hue &gt;= 300 &amp;&amp; hue &lt; 330 ? 0 : 0))))))"/>
+				 <assign location="b" expr="(hue &gt; 0 &amp;&amp; hue &lt; 30) ? 127 - x : (hue &gt; 30 &amp;&amp; hue &lt; 60 ? 0 : (hue &gt;= 60 &amp;&amp; hue &lt; 120 ? 0 : (hue &gt;= 120 &amp;&amp; hue &lt; 180 ? x : (hue &gt;= 180 &amp;&amp; hue &lt; 240 ? 255 : (hue &gt;= 240 &amp;&amp; hue &lt; 300 ? 255 : (hue &gt;= 300 &amp;&amp; hue &lt; 330 ? 255 - x : 0))))))"/>
+				 <assign location="light_lc01_color" expr="(b + (g * 256) + (r * 256 * 256))"/>
+			</transition>
+		</state>
+	</state>
+</scxml>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" datamodel="ecmascript" name="flow_meter_pump">
+	<datamodel>
+		<data expr="0.0" id="pump_targetrpm" />
+		<data expr="0" id="conf_run_time" />
+	</datamodel>
+	<state id="main_region">
+		<initial>
+			<transition target="Idle" type="internal">
+			</transition>
+		</initial>
+		<state id="Idle">
+			<transition event="start"  target="running">
+			</transition>
+		</state>
+		<state id="running">
+			<onentry>
+				<send event="running_t_2_timeEvent_0" delayexpr="conf_run_time * 1000"/>
+			</onentry>
+			<onexit>
+				<cancel sendid="running_t_2_timeEvent_0" />
+			</onexit>
+			<onentry>
+				 <assign location="pump_targetrpm" expr="_event.data"/>
+			</onentry>
+			<onexit>
+				 <assign location="pump_targetrpm" expr="0"/>
+			</onexit>
+			<transition event="stop"  target="Idle">
+			</transition>
+			<transition event="emergencyshutdown"  target="Idle">
+			</transition>
+			<transition event="running_t_2_timeEvent_0"  target="Idle">
+			</transition>
+		</state>
+	</state>
+</scxml>

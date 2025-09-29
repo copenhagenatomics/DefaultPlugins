@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" datamodel="ecmascript" name="colors">
+	<datamodel>
+		<data expr="0.0" id="light" />
+		<data expr="0.0" id="pressure" />
+		<data expr="0.0" id="temperature" />
+		<data expr="27" id="conf_temperature_treshold" />
+	</datamodel>
+	<state id="top">
+		<initial>
+			<transition target="idle" type="internal">
+			</transition>
+		</initial>
+		<state id="idle">
+			<onentry>
+				 <assign location="light" expr="0xff00"/>
+			</onentry>
+			<transition  cond="pressure &gt; 0.1" target="high_pressure">
+			</transition>
+			<transition  cond="temperature &gt; conf_temperature_treshold" target="warm">
+			</transition>
+		</state>
+		<state id="high_pressure">
+			<onentry>
+				 <assign location="light" expr="0xff0000"/>
+			</onentry>
+			<transition  cond="pressure &lt; 0.085" target="idle">
+			</transition>
+		</state>
+		<state id="warm">
+			<onentry>
+				 <assign location="light" expr="0xff"/>
+			</onentry>
+			<transition  cond="temperature &lt; conf_temperature_treshold - 0.5" target="idle">
+			</transition>
+		</state>
+	</state>
+</scxml>

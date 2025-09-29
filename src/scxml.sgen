@@ -1,0 +1,209 @@
+GeneratorModel for yakindu::scxml {
+
+const PROJECT : string = "DefaultPlugins"
+
+const FOLDER : string = "scxml"
+
+	statechart pid {
+
+		feature Outlet {
+			targetProject = PROJECT
+			targetFolder = FOLDER
+		}
+	}
+	statechart pid_update {
+
+		feature Outlet {
+			targetProject = PROJECT
+			targetFolder = FOLDER
+		}
+	}
+	
+	statechart colors {
+
+		feature Outlet {
+			targetProject = PROJECT
+			targetFolder = FOLDER
+		}
+	}
+	
+	statechart demoplugin2 {
+
+		feature Outlet {
+			targetProject = PROJECT
+			targetFolder = FOLDER
+		}
+	}
+
+	statechart demoplugin1 {
+
+		feature Outlet {
+			targetProject = PROJECT
+			targetFolder = FOLDER
+		}
+	}
+
+	statechart temptest {
+
+		feature Outlet {
+			targetProject = PROJECT
+			targetFolder = FOLDER
+		}
+	}
+
+	statechart example2 {
+
+		feature Outlet {
+			targetProject = PROJECT
+			targetFolder = FOLDER
+		}
+	}
+
+	statechart example3 {
+
+		feature Outlet {
+			targetProject = PROJECT
+			targetFolder = FOLDER
+		}
+	}
+
+	statechart demoday1 {
+
+		feature Outlet {
+			targetProject = PROJECT
+			targetFolder = FOLDER
+		}
+	}
+
+	statechart demoday2 {
+
+		feature Outlet {
+			targetProject = PROJECT
+			targetFolder = FOLDER
+		}
+	}
+
+	statechart hwTest_Pressure {
+
+		feature Outlet {
+			targetProject = PROJECT
+			targetFolder = FOLDER
+		}
+	}
+
+	statechart mydemoplugin {
+
+		feature Outlet {
+			targetProject = PROJECT
+			targetFolder = FOLDER
+		}
+	}
+
+	statechart power_control {
+
+		feature Outlet {
+			targetProject = PROJECT
+			targetFolder = FOLDER
+		}
+	}
+	statechart power_control_current_sampling {
+
+		feature Outlet {
+			targetProject = PROJECT
+			targetFolder = FOLDER
+		}
+	}
+	statechart sustainedExample {
+
+		feature Outlet {
+			targetProject = PROJECT
+			targetFolder = FOLDER
+		}
+	}
+    statechart flow_meter_pump {
+
+  	    feature Outlet {
+  		    targetProject = PROJECT
+  		    targetFolder = FOLDER
+  	    }
+    }
+    							
+    statechart offwhen {
+
+  	    feature Outlet {
+  		    targetProject = PROJECT
+  		    targetFolder = FOLDER
+  	    }
+    }									
+    statechart heaters_current_test {
+
+  	    feature Outlet {
+  		    targetProject = PROJECT
+  		    targetFolder = FOLDER
+  	    }
+    }									
+    statechart fakefailure {
+
+  	    feature Outlet {
+  		    targetProject = PROJECT
+  		    targetFolder = FOLDER
+  	    }
+    }
+    statechart LightTest {
+    
+		feature Outlet {
+			targetProject = PROJECT
+  	        targetFolder = FOLDER
+  	   }
+	}
+	
+	statechart hw_lightbulb {
+   
+		feature Outlet {
+			targetProject = PROJECT
+  	        targetFolder = FOLDER
+		}
+	}	
+	
+	statechart NyadDemo1 {
+   
+		feature Outlet {
+			targetProject = PROJECT
+  	        targetFolder = FOLDER
+		}
+	}
+	
+	statechart ACPortCheckChart {
+   
+		feature Outlet {
+			targetProject = PROJECT
+  	        targetFolder = FOLDER
+		}
+	}
+	
+	statechart DCPortCheckChart {
+   
+		feature Outlet {
+			targetProject = PROJECT
+  	        targetFolder = FOLDER
+		}
+	}
+	
+	statechart LobbyLight {
+   
+		feature Outlet {
+			targetProject = PROJECT
+  	        targetFolder = FOLDER
+		}
+	}
+	
+	statechart assign {
+   
+		feature Outlet {
+			targetProject = PROJECT
+  	        targetFolder = FOLDER
+
+		}
+	}
+   
+}  

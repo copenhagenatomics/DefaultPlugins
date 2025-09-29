@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" datamodel="ecmascript" name="demoday2">
+	<datamodel>
+		<data expr="0.0" id="temp1_degC" />
+		<data expr="0.0" id="valve1_onoff" />
+		<data expr="0.0" id="light1_color" />
+		<data expr="0.0" id="conf_color_change_temp" />
+	</datamodel>
+	<state id="main_region">
+		<initial>
+			<transition target="state_off" type="internal">
+			</transition>
+		</initial>
+		<state id="state_off">
+			<transition event="light_green"  target="state_light_green">
+			</transition>
+			<transition event="light_red"  target="state_light_red">
+			</transition>
+			<transition event="light_off"  target="state_light_off">
+			</transition>
+			<transition event="valve_on"  target="state_valve_on">
+			</transition>
+			<transition event="valve_off"  target="state_valve_off">
+			</transition>
+			<transition  cond="temp1_degC &gt; conf_color_change_temp &amp;&amp; light1_color != 0x111100" target="state_light_yellow">
+			</transition>
+		</state>
+		<state id="state_light_green">
+			<onentry>
+				 <assign location="light1_color" expr="0x1100"/>
+			</onentry>
+			<transition   target="state_off">
+			</transition>
+		</state>
+		<state id="state_light_red">
+			<onentry>
+				 <assign location="light1_color" expr="0x110000"/>
+			</onentry>
+			<transition   target="state_off">
+			</transition>
+		</state>
+		<state id="state_valve_on">
+			<onentry>
+				 <assign location="valve1_onoff" expr="1.0"/>
+			</onentry>
+			<transition   target="state_off">
+			</transition>
+		</state>
+		<state id="state_light_off">
+			<onentry>
+				 <assign location="light1_color" expr="0x0"/>
+			</onentry>
+			<transition   target="state_off">
+			</transition>
+		</state>
+		<state id="state_valve_off">
+			<onentry>
+				 <assign location="valve1_onoff" expr="0.0"/>
+			</onentry>
+			<transition   target="state_off">
+			</transition>
+		</state>
+		<state id="state_light_yellow">
+			<onentry>
+				 <assign location="light1_color" expr="0x111100"/>
+			</onentry>
+			<transition   target="state_off">
+			</transition>
+		</state>
+	</state>
+</scxml>

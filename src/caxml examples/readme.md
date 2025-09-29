@@ -1,0 +1,1 @@
+This folder contains some examples cases where the way statecharts runs in our plugin system differs from scxml (and thus the yakindu's simulator).
