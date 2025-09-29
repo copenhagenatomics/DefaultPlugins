@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" datamodel="ecmascript" name="sustainedExample">
+	<datamodel>
+		<data expr="0.0" id="light_lc01_color" />
+		<data expr="0.0" id="recentMinHumidity_filter" />
+		<data expr="0.0" id="recentMinTemperature_filter" />
+		<data expr="43.0" id="conf_minHumidityTreshold" />
+		<data expr="26.0" id="conf_minTemperatureTreshold" />
+	</datamodel>
+	<state id="main_region">
+		<initial>
+			<transition target="StateA" type="internal">
+			</transition>
+		</initial>
+		<state id="StateA">
+			<onentry>
+				 <assign location="light_lc01_color" expr="0"/>
+			</onentry>
+			<transition  cond="recentMinHumidity_filter &gt; conf_minHumidityTreshold" target="red">
+			</transition>
+			<transition  cond="recentMinTemperature_filter &gt; conf_minTemperatureTreshold" target="green">
+			</transition>
+		</state>
+		<state id="red">
+			<onentry>
+				 <assign location="light_lc01_color" expr="0xff0000"/>
+			</onentry>
+			<transition  cond="recentMinHumidity_filter &lt; conf_minHumidityTreshold - 0.5" target="StateA">
+			</transition>
+		</state>
+		<state id="green">
+			<onentry>
+				 <assign location="light_lc01_color" expr="0xff00"/>
+			</onentry>
+			<transition  cond="recentMinTemperature_filter &lt; conf_minTemperatureTreshold - 0.5" target="StateA">
+			</transition>
+		</state>
+	</state>
+</scxml>

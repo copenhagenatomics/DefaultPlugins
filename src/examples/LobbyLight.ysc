@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:sgraph="http://www.yakindu.org/sct/sgraph/2.0.0">
+  <sgraph:Statechart xmi:id="_by1ZQNPhEe-bQ8NtyV7CJg" specification="interface:&#xD;&#xA;&#x9;in event vector&#xD;&#xA;&#x9;in event emergencyshutdown&#xD;&#xA;&#x9;var temperature_tm01_01 : real&#xD;&#xA;&#x9;var light_lc01_color : integer&#xD;&#xA;&#x9;var light_lc02_color : integer&#xD;&#xA;&#x9;var  valve_dc01_02_onoff: integer&#xD;&#xA;&#x9;&#xD;&#xA;interface LobbyLight:&#xD;&#xA;&#x9;var hue : integer&#xD;&#xA;&#x9;var r : integer&#xD;&#xA;&#x9;var g : integer&#xD;&#xA;&#x9;var b : integer&#xD;&#xA;&#x9;var x : integer&#xD;&#xA;&#x9;&#xD;&#xA;interface conf:&#xD;&#xA;    var mintemp : integer = 22&#xD;&#xA;    var maxtemp : integer = 33" name="LobbyLight">
+    <regions xmi:id="_by2AW9PhEe-bQ8NtyV7CJg" name="main region">
+      <vertices xsi:type="sgraph:Entry" xmi:id="_by2AXNPhEe-bQ8NtyV7CJg">
+        <outgoingTransitions xmi:id="_jxgpgNSxEe-bQ8NtyV7CJg" specification="" target="_OEa5sNSrEe-bQ8NtyV7CJg"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_OEa5sNSrEe-bQ8NtyV7CJg" specification="//built by Nyad Evernow, interning at Copenhagen Atomics in January, 2025.&#xD;&#xA;&#xD;&#xA;vector /&#xD;&#xA;&#xD;&#xA;//here I am relating the temperature from the thermocouple to a hue value (look up HSV to RGB conversion)&#xD;&#xA;//hue values range from 0degrees to 360degrees, I only want to go from blue to red through green so I limited it to hue = 0 to hue = 240&#xD;&#xA;&#x9;LobbyLight.hue = temperature_tm01_01 >= conf.mintemp &amp;&amp; temperature_tm01_01 &lt;= conf.maxtemp&#xD;&#xA;&#x9;&#x9;? (240 - ((240 / (conf.maxtemp - conf.mintemp))*(temperature_tm01_01 - conf.mintemp))) as integer&#xD;&#xA;&#x9;&#x9;: (temperature_tm01_01 > 40 || temperature_tm01_01 &lt; 5&#xD;&#xA;&#x9;&#x9;&#x9;? LobbyLight.hue&#xD;&#xA;&#x9;&#x9;&#x9;: 0);&#xD;&#xA;&#xD;&#xA;//x is the portion of the way through the segment&#xD;&#xA;&#x9;LobbyLight.x = 255 * (LobbyLight.hue % 60)/60;&#xD;&#xA;&#xD;&#xA;//here I extract the RGB values from the hue segment, 255 is the maximum RGB value and 0 is the minimum.&#xD;&#xA;//each segment is 60degrees around the hue range, in each segment one color is held at its maximum, one is held at its minimum, and one changes.&#xD;&#xA;&#x9;LobbyLight.r = (LobbyLight.hue >= 0 &amp;&amp; LobbyLight.hue &lt; 60)&#xD;&#xA;&#x9;&#x9;? 255&#xD;&#xA;&#x9;&#x9;: (LobbyLight.hue >= 60 &amp;&amp; LobbyLight.hue &lt; 120&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;? 255 - LobbyLight.x&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;: (LobbyLight.hue >= 120 &amp;&amp; LobbyLight.hue &lt; 180&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;? 0&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;: (LobbyLight.hue >= 180 &amp;&amp; LobbyLight.hue &lt; 240&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;? 0&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;: 255)));&#xD;&#xA;&#x9;LobbyLight.g = (LobbyLight.hue >= 0 &amp;&amp; LobbyLight.hue &lt; 60)&#xD;&#xA;&#x9;&#x9;? LobbyLight.x&#xD;&#xA;&#x9;&#x9;: (LobbyLight.hue >= 60 &amp;&amp; LobbyLight.hue &lt; 120&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;? 255&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;: (LobbyLight.hue >= 120 &amp;&amp; LobbyLight.hue &lt; 180&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;? 255&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;: (LobbyLight.hue >= 180 &amp;&amp; LobbyLight.hue &lt; 240&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;? 255 - LobbyLight.x&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;: 0)));&#xD;&#xA;&#x9;LobbyLight.b = (LobbyLight.hue >= 0 &amp;&amp; LobbyLight.hue &lt; 60)&#xD;&#xA;&#x9;&#x9;? 0&#xD;&#xA;&#x9;&#x9;: (LobbyLight.hue >= 60 &amp;&amp; LobbyLight.hue &lt; 120&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;? 0&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;: (LobbyLight.hue >= 120 &amp;&amp; LobbyLight.hue &lt; 180&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;? LobbyLight.x&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;: (LobbyLight.hue >= 180 &amp;&amp; LobbyLight.hue &lt; 240&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;? 255&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;: 0)));&#xD;&#xA;&#xD;&#xA;//here I take the RGB values from above and add them together in hex, FFFF00 is the maximum, 0000FF is the minimum due to one color always being on at full&#xD;&#xA;&#x9;light_lc01_color = (LobbyLight.b + (LobbyLight.g * 256) + (LobbyLight.r * 256 * 256));&#xD;&#xA;&#x9;light_lc02_color = (LobbyLight.b + (LobbyLight.g * 256) + (LobbyLight.r * 256 * 256))&#xD;&#xA;&#x9;&#xD;&#xA;//some ideas for a future interns to improve the demo as a project: &#xD;&#xA;//change the T and the h in the light display to operate separately, I have already initialized light port 2&#xD;&#xA;//make the color go from dark to light rather than through a rainbow, changing all RGB values simultaneously&#xD;&#xA;//add other interactive features, perhaps to the dc ports as I'm only currently using two" name="Fan Off" incomingTransitions="_jxgpgNSxEe-bQ8NtyV7CJg _uDqsENliEe-5yKSbN-PEJw">
+        <outgoingTransitions xmi:id="_pppX0NliEe-5yKSbN-PEJw" specification="emergencyshutdown" target="_kU3rgNliEe-5yKSbN-PEJw"/>
+      </vertices>
+      <vertices xsi:type="sgraph:State" xmi:id="_kU3rgNliEe-5yKSbN-PEJw" specification="vector /&#xD;&#xA;&#x9;&#xD;&#xA;&#x9;LobbyLight.hue = temperature_tm01_01 >= conf.mintemp &amp;&amp; temperature_tm01_01 &lt;= conf.maxtemp&#xD;&#xA;&#x9;&#x9;? (240 - ((240 / (conf.maxtemp - conf.mintemp)) * (temperature_tm01_01 - conf.mintemp))) as integer&#xD;&#xA;&#x9;&#x9;: 300;&#xD;&#xA;&#xD;&#xA;&#x9;LobbyLight.x = 255 * (LobbyLight.hue % 60)/60;&#xD;&#xA;&#xD;&#xA;&#x9;LobbyLight.r = (LobbyLight.hue >= 0 &amp;&amp; LobbyLight.hue &lt; 60)&#xD;&#xA;&#x9;&#x9;? 255&#xD;&#xA;&#x9;&#x9;: (LobbyLight.hue >= 60 &amp;&amp; LobbyLight.hue &lt; 120&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;? 255 - LobbyLight.x&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;: (LobbyLight.hue >= 120 &amp;&amp; LobbyLight.hue &lt; 180&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;? 0&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;: (LobbyLight.hue >= 180 &amp;&amp; LobbyLight.hue &lt; 240&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;? 0&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;: 255)));&#xD;&#xA;&#x9;LobbyLight.g = (LobbyLight.hue >= 0 &amp;&amp; LobbyLight.hue &lt; 60)&#xD;&#xA;&#x9;&#x9;? LobbyLight.x&#xD;&#xA;&#x9;&#x9;: (LobbyLight.hue >= 60 &amp;&amp; LobbyLight.hue &lt; 120&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;? 255&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;: (LobbyLight.hue >= 120 &amp;&amp; LobbyLight.hue &lt; 180&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;? 255&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;: (LobbyLight.hue >= 180 &amp;&amp; LobbyLight.hue &lt; 240&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;? 255 - LobbyLight.x&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;: 0)));&#xD;&#xA;&#x9;LobbyLight.b = (LobbyLight.hue >= 0 &amp;&amp; LobbyLight.hue &lt; 60)&#xD;&#xA;&#x9;&#x9;? 0&#xD;&#xA;&#x9;&#x9;: (LobbyLight.hue >= 60 &amp;&amp; LobbyLight.hue &lt; 120&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;? 0&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;: (LobbyLight.hue >= 120 &amp;&amp; LobbyLight.hue &lt; 180&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;? LobbyLight.x&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;: (LobbyLight.hue >= 180 &amp;&amp; LobbyLight.hue &lt; 240&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;? 255&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;: 0)));&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#x9;light_lc01_color = (LobbyLight.b + (LobbyLight.g * 256) + (LobbyLight.r * 256 * 256));&#xD;&#xA;&#x9;light_lc02_color = (LobbyLight.b + (LobbyLight.g * 256) + (LobbyLight.r * 256 * 256));&#xD;&#xA;&#xD;&#xA;&#x9;valve_dc01_02_onoff = 100" name="Fan On" incomingTransitions="_pppX0NliEe-5yKSbN-PEJw">
+        <outgoingTransitions xmi:id="_uDqsENliEe-5yKSbN-PEJw" specification="after 120s" target="_OEa5sNSrEe-bQ8NtyV7CJg"/>
+      </vertices>
+    </regions>
+  </sgraph:Statechart>
+  <notation:Diagram xmi:id="_by2nbdPhEe-bQ8NtyV7CJg" type="org.yakindu.sct.ui.editor.editor.StatechartDiagramEditor" element="_by1ZQNPhEe-bQ8NtyV7CJg" measurementUnit="Pixel">
+    <children xmi:id="_by2nbtPhEe-bQ8NtyV7CJg" type="Region" element="_by2AW9PhEe-bQ8NtyV7CJg">
+      <children xsi:type="notation:DecorationNode" xmi:id="_by2nb9PhEe-bQ8NtyV7CJg" type="RegionName">
+        <styles xsi:type="notation:ShapeStyle" xmi:id="_by2ncNPhEe-bQ8NtyV7CJg"/>
+        <layoutConstraint xsi:type="notation:Location" xmi:id="_by2ncdPhEe-bQ8NtyV7CJg"/>
+      </children>
+      <children xsi:type="notation:Shape" xmi:id="_by2nctPhEe-bQ8NtyV7CJg" type="RegionCompartment" fontName="Verdana" lineColor="4210752">
+        <children xmi:id="_by2nc9PhEe-bQ8NtyV7CJg" type="Entry" element="_by2AXNPhEe-bQ8NtyV7CJg">
+          <children xmi:id="_by2ndNPhEe-bQ8NtyV7CJg" type="BorderItemLabelContainer">
+            <children xsi:type="notation:DecorationNode" xmi:id="_by2nddPhEe-bQ8NtyV7CJg" type="BorderItemLabel">
+              <styles xsi:type="notation:ShapeStyle" xmi:id="_by2ndtPhEe-bQ8NtyV7CJg"/>
+              <layoutConstraint xsi:type="notation:Location" xmi:id="_by2nd9PhEe-bQ8NtyV7CJg"/>
+            </children>
+            <styles xsi:type="notation:ShapeStyle" xmi:id="_by2neNPhEe-bQ8NtyV7CJg" fontName="Verdana" lineColor="4210752"/>
+            <layoutConstraint xsi:type="notation:Bounds" xmi:id="_by2nedPhEe-bQ8NtyV7CJg"/>
+          </children>
+          <styles xsi:type="notation:ShapeStyle" xmi:id="_by2netPhEe-bQ8NtyV7CJg" fontName="Verdana" fillColor="0" lineColor="16777215"/>
+          <styles xsi:type="notation:NamedStyle" xmi:id="_by2ne9PhEe-bQ8NtyV7CJg" name="allowColors"/>
+          <layoutConstraint xsi:type="notation:Bounds" xmi:id="_by2nfNPhEe-bQ8NtyV7CJg" x="26" y="13" width="15" height="15"/>
+        </children>
+        <children xmi:id="_OEgZQNSrEe-bQ8NtyV7CJg" type="State" element="_OEa5sNSrEe-bQ8NtyV7CJg">
+          <children xsi:type="notation:DecorationNode" xmi:id="_OEgZRNSrEe-bQ8NtyV7CJg" type="StateName">
+            <styles xsi:type="notation:ShapeStyle" xmi:id="_OEgZRdSrEe-bQ8NtyV7CJg"/>
+            <layoutConstraint xsi:type="notation:Location" xmi:id="_OEgZRtSrEe-bQ8NtyV7CJg"/>
+          </children>
+          <children xsi:type="notation:Compartment" xmi:id="_OEgZR9SrEe-bQ8NtyV7CJg" type="StateTextCompartment">
+            <children xsi:type="notation:Shape" xmi:id="_OEgZSNSrEe-bQ8NtyV7CJg" type="StateTextCompartmentExpression" fontName="Verdana" lineColor="4210752">
+              <layoutConstraint xsi:type="notation:Bounds" xmi:id="_OEgZSdSrEe-bQ8NtyV7CJg"/>
+            </children>
+          </children>
+          <children xsi:type="notation:Compartment" xmi:id="_OEgZStSrEe-bQ8NtyV7CJg" type="StateFigureCompartment"/>
+          <styles xsi:type="notation:ShapeStyle" xmi:id="_OEgZQdSrEe-bQ8NtyV7CJg" fontName="Verdana" fillColor="15720400" lineColor="12632256"/>
+          <styles xsi:type="notation:FontStyle" xmi:id="_OEgZQtSrEe-bQ8NtyV7CJg"/>
+          <styles xsi:type="notation:BooleanValueStyle" xmi:id="_OEgZS9SrEe-bQ8NtyV7CJg" name="isHorizontal" booleanValue="true"/>
+          <layoutConstraint xsi:type="notation:Bounds" xmi:id="_OEgZQ9SrEe-bQ8NtyV7CJg" y="54" width="1031" height="743"/>
+        </children>
+        <children xmi:id="_kU2dYNliEe-5yKSbN-PEJw" type="State" element="_kU3rgNliEe-5yKSbN-PEJw">
+          <children xsi:type="notation:DecorationNode" xmi:id="_kU2dYdliEe-5yKSbN-PEJw" type="StateName">
+            <styles xsi:type="notation:ShapeStyle" xmi:id="_kU2dYtliEe-5yKSbN-PEJw"/>
+            <layoutConstraint xsi:type="notation:Location" xmi:id="_kU2dY9liEe-5yKSbN-PEJw"/>
+          </children>
+          <children xsi:type="notation:Compartment" xmi:id="_kU2dZNliEe-5yKSbN-PEJw" type="StateTextCompartment">
+            <children xsi:type="notation:Shape" xmi:id="_kU2dZdliEe-5yKSbN-PEJw" type="StateTextCompartmentExpression" fontName="Verdana" lineColor="4210752">
+              <layoutConstraint xsi:type="notation:Bounds" xmi:id="_kU2dZtliEe-5yKSbN-PEJw"/>
+            </children>
+          </children>
+          <children xsi:type="notation:Compartment" xmi:id="_kU2dZ9liEe-5yKSbN-PEJw" type="StateFigureCompartment"/>
+          <styles xsi:type="notation:ShapeStyle" xmi:id="_kU2daNliEe-5yKSbN-PEJw" fontName="Verdana" fillColor="15720400" lineColor="12632256"/>
+          <styles xsi:type="notation:FontStyle" xmi:id="_kU2dadliEe-5yKSbN-PEJw"/>
+          <styles xsi:type="notation:BooleanValueStyle" xmi:id="_kU2datliEe-5yKSbN-PEJw" name="isHorizontal" booleanValue="true"/>
+          <layoutConstraint xsi:type="notation:Bounds" xmi:id="_kU2da9liEe-5yKSbN-PEJw" x="1226" y="47" width="698" height="618"/>
+        </children>
+        <layoutConstraint xsi:type="notation:Bounds" xmi:id="_by2nldPhEe-bQ8NtyV7CJg"/>
+      </children>
+      <styles xsi:type="notation:ShapeStyle" xmi:id="_by2nltPhEe-bQ8NtyV7CJg" fontName="Verdana" fillColor="16448250" lineColor="12632256"/>
+      <layoutConstraint xsi:type="notation:Bounds" xmi:id="_by2nl9PhEe-bQ8NtyV7CJg" x="205" y="10" width="1963" height="1076"/>
+    </children>
+    <children xsi:type="notation:Shape" xmi:id="_by2nmNPhEe-bQ8NtyV7CJg" type="StatechartText" fontName="Verdana" lineColor="4210752">
+      <children xsi:type="notation:DecorationNode" xmi:id="_by2nmdPhEe-bQ8NtyV7CJg" type="StatechartName">
+        <styles xsi:type="notation:ShapeStyle" xmi:id="_by2nmtPhEe-bQ8NtyV7CJg"/>
+        <layoutConstraint xsi:type="notation:Location" xmi:id="_by2nm9PhEe-bQ8NtyV7CJg"/>
+      </children>
+      <children xsi:type="notation:Shape" xmi:id="_by2nnNPhEe-bQ8NtyV7CJg" type="StatechartTextExpression" fontName="Verdana" lineColor="4210752">
+        <layoutConstraint xsi:type="notation:Bounds" xmi:id="_by2nndPhEe-bQ8NtyV7CJg"/>
+      </children>
+      <layoutConstraint xsi:type="notation:Bounds" xmi:id="_by2nntPhEe-bQ8NtyV7CJg" x="10" y="10" width="200" height="400"/>
+    </children>
+    <styles xsi:type="notation:BooleanValueStyle" xmi:id="_by2nn9PhEe-bQ8NtyV7CJg" name="inlineDefinitionSection"/>
+    <styles xsi:type="notation:DiagramStyle" xmi:id="_by2noNPhEe-bQ8NtyV7CJg"/>
+    <edges xmi:id="_jxpzcNSxEe-bQ8NtyV7CJg" type="Transition" element="_jxgpgNSxEe-bQ8NtyV7CJg" source="_by2nc9PhEe-bQ8NtyV7CJg" target="_OEgZQNSrEe-bQ8NtyV7CJg">
+      <children xsi:type="notation:DecorationNode" xmi:id="_jxpzdNSxEe-bQ8NtyV7CJg" type="TransitionExpression">
+        <styles xsi:type="notation:ShapeStyle" xmi:id="_jxpzddSxEe-bQ8NtyV7CJg"/>
+        <layoutConstraint xsi:type="notation:Location" xmi:id="_jxpzdtSxEe-bQ8NtyV7CJg" x="17" y="26"/>
+      </children>
+      <styles xsi:type="notation:ConnectorStyle" xmi:id="_jxpzcdSxEe-bQ8NtyV7CJg" routing="Rectilinear" lineColor="4210752"/>
+      <styles xsi:type="notation:FontStyle" xmi:id="_jxpzc9SxEe-bQ8NtyV7CJg" fontName="Verdana"/>
+      <bendpoints xsi:type="notation:RelativeBendpoints" xmi:id="_jxpzctSxEe-bQ8NtyV7CJg" points="[5, 4, -477, -401]$[88, 4, -394, -401]$[88, 34, -394, -371]"/>
+    </edges>
+    <edges xmi:id="_ppx6sNliEe-5yKSbN-PEJw" type="Transition" element="_pppX0NliEe-5yKSbN-PEJw" source="_OEgZQNSrEe-bQ8NtyV7CJg" target="_kU2dYNliEe-5yKSbN-PEJw">
+      <children xsi:type="notation:DecorationNode" xmi:id="_ppzv4NliEe-5yKSbN-PEJw" type="TransitionExpression">
+        <styles xsi:type="notation:ShapeStyle" xmi:id="_ppzv4dliEe-5yKSbN-PEJw"/>
+        <layoutConstraint xsi:type="notation:Location" xmi:id="_ppzv4tliEe-5yKSbN-PEJw" y="-9"/>
+      </children>
+      <styles xsi:type="notation:ConnectorStyle" xmi:id="_ppx6sdliEe-5yKSbN-PEJw" routing="Rectilinear" lineColor="4210752"/>
+      <styles xsi:type="notation:FontStyle" xmi:id="_ppyhwNliEe-5yKSbN-PEJw" fontName="Verdana"/>
+      <bendpoints xsi:type="notation:RelativeBendpoints" xmi:id="_ppx6stliEe-5yKSbN-PEJw" points="[41, -43, -216, -26]$[236, -43, -21, -26]"/>
+      <sourceAnchor xsi:type="notation:IdentityAnchor" xmi:id="_pqDngNliEe-5yKSbN-PEJw" id="(0.9611486486486487,0.09830508474576272)"/>
+      <targetAnchor xsi:type="notation:IdentityAnchor" xmi:id="_pqDngdliEe-5yKSbN-PEJw" id="(0.030405405405405407,0.10338983050847457)"/>
+    </edges>
+    <edges xmi:id="_uDyA0NliEe-5yKSbN-PEJw" type="Transition" element="_uDqsENliEe-5yKSbN-PEJw" source="_kU2dYNliEe-5yKSbN-PEJw" target="_OEgZQNSrEe-bQ8NtyV7CJg">
+      <children xsi:type="notation:DecorationNode" xmi:id="_uDyn4dliEe-5yKSbN-PEJw" type="TransitionExpression">
+        <styles xsi:type="notation:ShapeStyle" xmi:id="_uDyn4tliEe-5yKSbN-PEJw"/>
+        <layoutConstraint xsi:type="notation:Location" xmi:id="_uDyn49liEe-5yKSbN-PEJw" y="16"/>
+      </children>
+      <styles xsi:type="notation:ConnectorStyle" xmi:id="_uDyA0dliEe-5yKSbN-PEJw" routing="Rectilinear" lineColor="4210752"/>
+      <styles xsi:type="notation:FontStyle" xmi:id="_uDyn4NliEe-5yKSbN-PEJw" fontName="Verdana"/>
+      <bendpoints xsi:type="notation:RelativeBendpoints" xmi:id="_uDyA0tliEe-5yKSbN-PEJw" points="[-29, -194, 307, -301]$[-224, -194, 112, -301]"/>
+      <sourceAnchor xsi:type="notation:IdentityAnchor" xmi:id="_uEB4cNliEe-5yKSbN-PEJw" id="(0.04222972972972973,0.8406779661016949)"/>
+      <targetAnchor xsi:type="notation:IdentityAnchor" xmi:id="_uEB4cdliEe-5yKSbN-PEJw" id="(0.8918918918918919,0.8338983050847457)"/>
+    </edges>
+  </notation:Diagram>
+</xmi:XMI>

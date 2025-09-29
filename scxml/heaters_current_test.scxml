@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" datamodel="ecmascript" name="heaters_current_test">
+	<datamodel>
+		<data expr="0" id="heaters_current_test_samplingIndex" />
+		<data expr="0" id="heaters_current_test_index" />
+		<data expr="0" id="heaters_current_test_heatersCount" />
+		<data expr="false" id="heaters_current_test_running" />
+		<data expr="false" id="heaters_current_test_invalidConfiguration_error" />
+		<data expr="false" id="heaters_current_test_lowHeaterCurrent_error" />
+		<data expr="1000" id="conf_onMs" />
+		<data expr="100" id="conf_offMs" />
+		<data expr="7.0" id="conf_minimumCurrent" />
+		<data expr="0.0" id="conf_area" />
+		<data expr="0.0" id="fieldlist_Heaters_item_current" />
+		<data expr="0.0" id="fieldlist_Heaters_item_onoff" />
+	</datamodel>
+	<state id="main_region">
+		<initial>
+			<transition target="config_check" type="internal">
+			</transition>
+		</initial>
+		<state id="idle">
+			<onentry>
+				 <assign location="heaters_current_test_running" expr="false"/>
+			</onentry>
+			<onexit>
+				 <assign location="heaters_current_test_samplingIndex" expr="-1"/>
+				 <assign location="heaters_current_test_lowHeaterCurrent_error" expr="false"/>
+			</onexit>
+			<transition event="heaters_current_test_start"  target="check_event_matches_area">
+			</transition>
+		</state>
+		<state id="config_check">
+			<onentry>
+				<send event="config_check_t_3_timeEvent_0" delay="100ms"/>
+			</onentry>
+			<onexit>
+				<cancel sendid="config_check_t_3_timeEvent_0" />
+			</onexit>
+			<transition event ="fieldlist.Heaters_foreach"  type="internal" >
+				 <assign location="heaters_current_test_heatersCount" expr="heaters_current_test_heatersCount + 1"/>
+			</transition>
+			<transition  cond="conf_onMs &lt; 100" target="invalid_conf">
+			</transition>
+			<transition  cond="conf_offMs &lt; 100" target="invalid_conf">
+			</transition>
+			<transition  cond="heaters_current_test_heatersCount &gt; 0" target="idle">
+			</transition>
+			<!-- no heaters -->
+			<transition event="config_check_t_3_timeEvent_0"  target="invalid_conf">
+			</transition>
+		</state>
+		<state id="invalid_conf">
+			<onentry>
+				 <assign location="heaters_current_test_invalidConfiguration_error" expr="true"/>
+			</onentry>
+		</state>
+		<state id="check_event_matches_area">
+			<onentry>
+				 <assign location="heaters_current_test_running" expr="_event.data == conf_area"/>
+			</onentry>
+			<transition  cond="heaters_current_test_running" target="Composite_turn_on_measure">
+			</transition>
+			<transition  cond="!heaters_current_test_running" target="idle">
+			</transition>
+		</state>
+		<state id="Composite_turn_on_measure">
+			<initial>
+				<transition target="turn_on" type="internal">
+				</transition>
+			</initial>
+			<state id="turn_on">
+				<onentry>
+					<send event="turn_on_t_1_timeEvent_0" delayexpr="conf_onMs"/>
+				</onentry>
+				<onexit>
+					<cancel sendid="turn_on_t_1_timeEvent_0" />
+				</onexit>
+				<onentry>
+					 <assign location="heaters_current_test_samplingIndex" expr="heaters_current_test_samplingIndex + 1"/>
+					 <assign location="heaters_current_test_index" expr="0"/>
+				</onentry>
+				<transition event ="vector"  type="internal" >
+					 <assign location="heaters_current_test_index" expr="0"/>
+				</transition>
+				<transition event ="fieldlist.Heaters_foreach"  type="internal" >
+					 <assign location="fieldlist_Heaters_item_onoff" expr="heaters_current_test_index == heaters_current_test_samplingIndex ? 1.0 : 0"/>
+					 <assign location="heaters_current_test_index" expr="heaters_current_test_index + 1"/>
+				</transition>
+				<transition  cond="heaters_current_test_samplingIndex &gt;= heaters_current_test_heatersCount" target="idle">
+				</transition>
+				<transition event="turn_on_t_1_timeEvent_0"  target="measure">
+				</transition>
+			</state>
+			<state id="measure">
+				<onentry>
+					<send event="measure_t_0_timeEvent_0" delayexpr="conf_offMs"/>
+				</onentry>
+				<onexit>
+					<cancel sendid="measure_t_0_timeEvent_0" />
+				</onexit>
+				<onentry>
+					 <assign location="heaters_current_test_index" expr="0"/>
+				</onentry>
+				<transition event ="fieldlist.Heaters_foreach"  type="internal" >
+					 <assign location="fieldlist_Heaters_item_onoff" expr="0"/>
+					 <assign location="heaters_current_test_lowHeaterCurrent_error" expr="heaters_current_test_lowHeaterCurrent_error || (heaters_current_test_index == heaters_current_test_samplingIndex &amp;&amp; fieldlist_Heaters_item_current &lt; conf_minimumCurrent)"/>
+					 <assign location="heaters_current_test_index" expr="heaters_current_test_index + 1"/>
+				</transition>
+				<transition event="measure_t_0_timeEvent_0"  target="turn_on">
+				</transition>
+			</state>
+			<transition event="heaters_current_test_stop"  target="all_off">
+			</transition>
+		</state>
+		<state id="all_off">
+			<transition event ="fieldlist.Heaters_foreach"  type="internal" >
+				 <assign location="fieldlist_Heaters_item_onoff" expr="0"/>
+			</transition>
+			<transition event="vector"  target="idle">
+			</transition>
+		</state>
+	</state>
+</scxml>

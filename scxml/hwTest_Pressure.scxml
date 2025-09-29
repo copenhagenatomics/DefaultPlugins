@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" datamodel="ecmascript" name="hwTest_Pressure">
+	<datamodel>
+		<data expr="0.0" id="PVsensor" />
+		<data expr="0.0" id="InValve_onoff" />
+		<data expr="0.0" id="OutValve_onoff" />
+		<data expr="0.5" id="conf_upperlimt" />
+		<data expr="0.01" id="conf_lowerlimt" />
+		<data expr="5" id="conf_holdtime" />
+		<data expr="0.0" id="hwTest_Pressure_know_state" />
+	</datamodel>
+	<state id="main_region">
+		<initial>
+			<transition target="off" type="internal">
+			</transition>
+		</initial>
+		<state id="off">
+			<onentry>
+				 <assign location="hwTest_Pressure_know_state" expr="1.0"/>
+			</onentry>
+			<transition event="Start"  target="test_running">
+			</transition>
+		</state>
+		<state id="test_running">
+			<onexit>
+				 <assign location="InValve_onoff" expr="0.0"/>
+				 <assign location="OutValve_onoff" expr="0.0"/>
+			</onexit>
+			<initial>
+				<transition target="pressure_up" type="internal">
+				</transition>
+			</initial>
+			<state id="pressure_up">
+				<onentry>
+					 <assign location="hwTest_Pressure_know_state" expr="2.1"/>
+				</onentry>
+				<transition event ="vector"  type="internal" >
+					 <assign location="InValve_onoff" expr="1.0"/>
+				</transition>
+				<onexit>
+					 <assign location="InValve_onoff" expr="0.0"/>
+				</onexit>
+				<transition  cond="PVsensor &gt;= conf_upperlimt" target="wait_high">
+				</transition>
+			</state>
+			<state id="wait_high">
+				<onentry>
+					<send event="wait_high_t_0_timeEvent_0" delayexpr="conf_holdtime * 1000"/>
+				</onentry>
+				<onexit>
+					<cancel sendid="wait_high_t_0_timeEvent_0" />
+				</onexit>
+				<onentry>
+					 <assign location="hwTest_Pressure_know_state" expr="2.2"/>
+				</onentry>
+				<transition event="wait_high_t_0_timeEvent_0"  target="pressure_down">
+				</transition>
+			</state>
+			<state id="pressure_down">
+				<onentry>
+					 <assign location="hwTest_Pressure_know_state" expr="2.3"/>
+				</onentry>
+				<transition event ="vector"  type="internal" >
+					 <assign location="OutValve_onoff" expr="1.0"/>
+				</transition>
+				<onexit>
+					 <assign location="OutValve_onoff" expr="0.0"/>
+				</onexit>
+				<transition  cond="PVsensor &lt;= conf_lowerlimt" target="wait_low">
+				</transition>
+			</state>
+			<state id="wait_low">
+				<onentry>
+					<send event="wait_low_t_0_timeEvent_0" delayexpr="conf_holdtime * 1000"/>
+				</onentry>
+				<onexit>
+					<cancel sendid="wait_low_t_0_timeEvent_0" />
+				</onexit>
+				<onentry>
+					 <assign location="hwTest_Pressure_know_state" expr="2.4"/>
+				</onentry>
+				<transition event="wait_low_t_0_timeEvent_0"  target="pressure_up">
+				</transition>
+			</state>
+			<transition event="Stop"  target="off">
+			</transition>
+		</state>
+	</state>
+</scxml>

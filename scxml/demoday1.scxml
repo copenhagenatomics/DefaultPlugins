@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" datamodel="ecmascript" name="demoday1">
+	<datamodel>
+		<data expr="0.0" id="MyHeater_onoff" />
+		<data expr="0.0" id="lys_color" />
+		<data expr="0.0" id="HeaterTemp_filter" />
+	</datamodel>
+	<state id="main_region">
+		<initial>
+			<transition target="green" type="internal">
+			</transition>
+		</initial>
+		<state id="green">
+			<onentry>
+				 <assign location="lys_color" expr="0xff00"/>
+			</onentry>
+			<transition  cond="MyHeater_onoff == 1" target="blå">
+			</transition>
+			<transition  cond="HeaterTemp_filter &gt; 250" target="rød">
+			</transition>
+		</state>
+		<state id="blå">
+			<onentry>
+				 <assign location="lys_color" expr="0xff"/>
+			</onentry>
+			<transition  cond="MyHeater_onoff == 0" target="green">
+			</transition>
+		</state>
+		<state id="rød">
+			<onentry>
+				 <assign location="lys_color" expr="0xff0000"/>
+			</onentry>
+			<transition  cond="HeaterTemp_filter &lt; 250" target="green">
+			</transition>
+		</state>
+	</state>
+</scxml>

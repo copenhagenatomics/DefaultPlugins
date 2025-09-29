@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" datamodel="ecmascript" name="demoplugin2">
+	<datamodel>
+		<data expr="0.0" id="temperature1" />
+		<data expr="0.0" id="ovenarea1_target" />
+		<data expr="0.0" id="heater1_onoff" />
+		<data expr="500" id="conf_targettemperature" />
+	</datamodel>
+	<state id="main_region">
+		<initial>
+			<transition target="validate_conf" type="internal">
+			</transition>
+		</initial>
+		<state id="Off">
+			<onentry>
+				 <assign location="ovenarea1_target" expr="0"/>
+			</onentry>
+			<transition event ="vector"  type="internal" >
+				 <assign location="ovenarea1_target" expr="0"/>
+			</transition>
+			<transition event="run"  target="Composite_heat_pump_statec">
+			</transition>
+		</state>
+		<state id="Composite_heat_pump_statec">
+			<initial>
+				<transition target="heat" type="internal">
+				</transition>
+			</initial>
+			<state id="heat">
+				<onentry>
+					 <assign location="ovenarea1_target" expr="600"/>
+				</onentry>
+				<transition event ="vector"  type="internal" >
+					 <assign location="ovenarea1_target" expr="600"/>
+				</transition>
+				<transition  cond="temperature1 &gt; conf_targettemperature" target="pump">
+				</transition>
+			</state>
+			<state id="pump">
+				<onentry>
+					<send event="pump_t_0_timeEvent_0" delay="10000s"/>
+				</onentry>
+				<onexit>
+					<cancel sendid="pump_t_0_timeEvent_0" />
+				</onexit>
+				<transition event="pump_t_0_timeEvent_0"  target="statec">
+				</transition>
+			</state>
+			<state id="statec">
+			</state>
+			<transition event="emergencyshutdown"  target="Off">
+			</transition>
+		</state>
+		<state id="validate_conf">
+			<transition   target="Off">
+			</transition>
+		</state>
+	</state>
+</scxml>

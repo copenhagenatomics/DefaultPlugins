@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" datamodel="ecmascript" name="example2">
+	<state id="main_regions">
+		<initial>
+			<transition target="Stop" type="internal">
+			</transition>
+		</initial>
+		<state id="Stop">
+			<transition event="myEvent"  target="State2">
+			</transition>
+		</state>
+		<state id="StateCi">
+			<transition event="myEvent"  target="Stop">
+			</transition>
+		</state>
+		<state id="State2">
+			<transition event="myEvent"  target="StateCi">
+			</transition>
+		</state>
+	</state>
+</scxml>

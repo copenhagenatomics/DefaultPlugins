@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" datamodel="ecmascript" name="mydemoplugin">
+	<datamodel>
+		<data expr="0.0" id="tankin_flow" />
+		<data expr="0.0" id="oxygen" />
+		<data expr="0.0" id="ovenarea1_target" />
+		<data expr="0.0" id="temperature1" />
+		<data expr="0.0" id="mypump_targetrpm" />
+		<data expr="0.5" id="conf_oxygenlevel" />
+		<data expr="2000" id="conf_rpm" />
+		<data expr="" id="conf_medium" />
+		<data expr="0.0" id="mydemoplugin_meltingtemperature" />
+	</datamodel>
+	<state id="main_region">
+		<initial>
+			<transition target="config" type="internal">
+			</transition>
+		</initial>
+		<state id="initial">
+			<onentry>
+				 <assign location="ovenarea1_target" expr="0"/>
+				 <assign location="mypump_targetrpm" expr="0"/>
+				 <assign location="tankin_flow" expr="1"/>
+			</onentry>
+			<transition event="run"  target="running">
+			</transition>
+		</state>
+		<state id="running">
+			<initial>
+				<transition target="removeoxygen" type="internal">
+				</transition>
+			</initial>
+			<state id="removeoxygen">
+				<onentry>
+					 <assign location="tankin_flow" expr="100"/>
+				</onentry>
+				<transition  cond="oxygen &lt; conf_oxygenlevel" target="melt_salt">
+				</transition>
+			</state>
+			<state id="melt_salt">
+				<onentry>
+					 <assign location="tankin_flow" expr="1"/>
+					 <assign location="ovenarea1_target" expr="500"/>
+				</onentry>
+				<transition  cond="temperature1 &gt; 400" target="pump_salt">
+				</transition>
+			</state>
+			<state id="pump_salt">
+				<onentry>
+					 <assign location="mypump_targetrpm" expr="conf_rpm"/>
+				</onentry>
+			</state>
+			<transition event="stop"  target="initial">
+			</transition>
+			<transition event="emergencyshutdown"  target="initial">
+			</transition>
+		</state>
+		<state id="config">
+			<transition  cond="conf_medium == 'flinak'" target="flinak">
+			</transition>
+			<transition  cond="conf_medium == 'nitrate'" target="other">
+			</transition>
+		</state>
+		<state id="flinak">
+			<onentry>
+				 <assign location="mydemoplugin_meltingtemperature" expr="475"/>
+			</onentry>
+			<transition   target="initial">
+			</transition>
+		</state>
+		<state id="other">
+			<onentry>
+				 <assign location="mydemoplugin_meltingtemperature" expr="275"/>
+			</onentry>
+			<transition   target="initial">
+			</transition>
+		</state>
+	</state>
+</scxml>
