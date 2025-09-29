@@ -7,9 +7,6 @@ on:
   pull_request:
     paths: [ 'scxml/**', '.github/workflows/scxml.yml', 'src/**' ]
     branches: [ main ]
-permissions:
-  actions: read
-  contents: read
 jobs:
   call-scxml:
     uses: copenhagenatomics/BasePlugins/.github/workflows/scxml.yml@main
