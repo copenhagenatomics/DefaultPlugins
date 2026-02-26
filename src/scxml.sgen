@@ -205,5 +205,12 @@ const FOLDER : string = "scxml"
 
 		}
 	}
+	
+	statechart TrainingDay {
+		feature Outlet {
+			targetProject = PROJECT
+  	        targetFolder = FOLDER
+		}
+	}
    
 }  
