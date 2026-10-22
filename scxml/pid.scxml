@@ -8,6 +8,7 @@
 		<data expr="600.0" id="conf_integralTime" />
 		<data expr="0.0" id="conf_derivativeTime" />
 		<data expr="20" id="conf_controlPeriod" />
+		<data expr="0" id="conf_offTime" />
 		<data expr="40" id="conf_trackingTime" />
 		<data expr="0.0" id="conf_minOutput" />
 		<data expr="0.0" id="conf_maxOutput" />
@@ -100,7 +101,7 @@
 			</initial>
 			<state id="calculate_values">
 				<onentry>
-					<send event="calculate_values_t_0_timeEvent_0" delayexpr="conf_controlPeriod * 1000"/>
+					<send event="calculate_values_t_0_timeEvent_0" delayexpr="(conf_controlPeriod - conf_offTime) * 1000"/>
 				</onentry>
 				<onexit>
 					<cancel sendid="calculate_values_t_0_timeEvent_0" />
@@ -132,7 +133,19 @@
 				</transition>
 			</state>
 			<state id="trigger_next_period">
-				<transition   target="calculate_values">
+				<onentry>
+					<send event="trigger_next_period_t_0_timeEvent_0" delayexpr="conf_offTime * 1000"/>
+				</onentry>
+				<onexit>
+					<cancel sendid="trigger_next_period_t_0_timeEvent_0" />
+				</onexit>
+				<onentry>
+					 <assign location="output" expr="0"/>
+				</onentry>
+				<transition event ="vector"  type="internal" >
+					 <assign location="output" expr="0"/>
+				</transition>
+				<transition event="trigger_next_period_t_0_timeEvent_0"  target="calculate_values">
 				</transition>
 			</state>
 			<transition  cond="target == 0.0" target="off">
