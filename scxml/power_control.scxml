@@ -21,16 +21,10 @@
 			<onentry>
 				 <assign location="this_maxCurrent" expr="conf_MaxCurrent"/>
 			</onentry>
-			<transition   target="waiting">
+			<transition   target="running">
 			</transition>
 		</state>
 		<state id="running">
-			<onentry>
-				<send event="running_t_0_timeEvent_0" delay="1s"/>
-			</onentry>
-			<onexit>
-				<cancel sendid="running_t_0_timeEvent_0" />
-			</onexit>
 			<initial>
 				<transition target="calculate_and_update" type="internal">
 				</transition>
@@ -54,22 +48,26 @@
 				</transition>
 			</state>
 			<state id="hold">
+				<onentry>
+					<send event="hold_t_0_timeEvent_0" delay="1s"/>
+				</onentry>
+				<onexit>
+					<cancel sendid="hold_t_0_timeEvent_0" />
+				</onexit>
+				<onentry>
+					 <assign location="this_currentSampled" expr="false"/>
+				</onentry>
+				<transition event ="fieldlist.Heaters_foreach"  type="internal" >
+					 <assign location="this_currentSampled" expr="this_currentSampled | fieldlist_Heaters_targetoutput &gt; 0"/>
+				</transition>
 				<transition event ="fieldlist.Heaters_foreach"  type="internal" >
 					 <assign location="fieldlist_Heaters_onoff" expr="this_fieldlist_Heaters_onoff_cache"/>
 				</transition>
+				<transition event="hold_t_0_timeEvent_0"  target="calculate_and_update">
+				</transition>
+				<transition  cond="this_currentSampled" target="calculate_and_update">
+				</transition>
 			</state>
-			<transition event="running_t_0_timeEvent_0"  target="running">
-			</transition>
-			<transition event="this.update_maxCurrent"  target="UpdatingMaxCurrent">
-			</transition>
-		</state>
-		<state id="waiting">
-			<transition event ="fieldlist.Heaters_foreach"  type="internal" >
-				 <assign location="this_currentSampled" expr="this_currentSampled | fieldlist_Heaters_currentsampled &gt; 0"/>
-				 <assign location="fieldlist_Heaters_onoff" expr="0.0"/>
-			</transition>
-			<transition  cond="this_currentSampled" target="running">
-			</transition>
 			<transition event="this.update_maxCurrent"  target="UpdatingMaxCurrent">
 			</transition>
 		</state>
@@ -77,7 +75,7 @@
 			<onentry>
 				 <assign location="this_maxCurrent" expr="conf_MaxCurrentUpdates == 1 ? _event.data : this_maxCurrent"/>
 			</onentry>
-			<transition event="vector"  target="waiting">
+			<transition event="vector"  target="running">
 			</transition>
 		</state>
 	</state>
