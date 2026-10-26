@@ -65,7 +65,7 @@
 				</transition>
 				<transition event="hold_t_0_timeEvent_0"  target="calculate_and_update">
 				</transition>
-				<transition  cond="this_currentSampled" target="calculate_and_update">
+				<transition  cond="!this_currentSampled" target="calculate_and_update">
 				</transition>
 			</state>
 			<transition event="this.update_maxCurrent"  target="UpdatingMaxCurrent">

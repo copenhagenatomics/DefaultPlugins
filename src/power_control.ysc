@@ -16,7 +16,7 @@
           </vertices>
           <vertices xsi:type="sgraph:State" xmi:id="_Pzw78IO3Ee67htl5QhuJrQ" specification="// the entry and the first foreach detect if any heaters are off so we can turn off without the usual 1 second delay&#xD;&#xA;// this helps remove delays in cases where all heaters are turned off to measure temperatures&#xD;&#xA;// note: we reuse the currentSampled channel for the all heaters off detection to avoid introducing an extra channel &#xD;&#xA;entry / &#xD;&#xA;    this.currentSampled = false&#xD;&#xA;fieldlist.Heaters_foreach /&#xD;&#xA;&#x9;this.currentSampled |= fieldlist.Heaters_targetoutput > 0&#xD;&#xA;    &#xD;&#xA;//hold heaters on the power level during 1 second&#xD;&#xA;fieldlist.Heaters_foreach /&#xD;&#xA;&#x9;fieldlist.Heaters_onoff = this_fieldlist.Heaters_onoff_cache&#x9;" name="hold" incomingTransitions="_P0BaoIO3Ee67htl5QhuJrQ">
             <outgoingTransitions xmi:id="_ooPJ0NEvEfGJ1ppCW3KjsQ" specification="after 1s" target="_Pz6tBYO3Ee67htl5QhuJrQ"/>
-            <outgoingTransitions xmi:id="_cXpakNEyEfGJ1ppCW3KjsQ" specification="[this.currentSampled]" target="_Pz6tBYO3Ee67htl5QhuJrQ"/>
+            <outgoingTransitions xmi:id="_cXpakNEyEfGJ1ppCW3KjsQ" specification="[!this.currentSampled]" target="_Pz6tBYO3Ee67htl5QhuJrQ"/>
           </vertices>
           <vertices xsi:type="sgraph:Entry" xmi:id="_PzwU4IO3Ee67htl5QhuJrQ">
             <outgoingTransitions xmi:id="_Pz43xIO3Ee67htl5QhuJrQ" specification="" target="_Pz6tBYO3Ee67htl5QhuJrQ"/>
