@@ -109,7 +109,9 @@
         <state id="calculate_values" viz:xywh="20,140,321,80" initial="valid_value">
           <transition cond="target == 0" target="off" viz:sourceHandle="top" viz:targetHandle="bottom"/>
           <onentry>
-            <assign location="this_invalidInputCount" expr="(this_invalidInputMode != -1 &amp;&amp; (input &lt; this_minValidInput || input &gt; this_maxValidInput)) ? this_invalidInputCount + 1 : 0"/>
+            <assign location="this_invalidInputCount" expr="(this_invalidInputMode != -1 &amp;&amp; (input &lt; this_minValidInput || input &gt; this_maxValidInput)) ? (this_invalidInputCount + 1 &lt; this_maxInvalidInputOccurences ? this_invalidInputCount + 1 : this_maxInvalidInputOccurences) : 0"/>
+
+
           </onentry>
           <initial>
             <transition target="valid_value" type="internal"/>
@@ -132,7 +134,7 @@
             <transition event="vector" type="internal">
               <assign location="output" expr="this_invalidInputMode == 0 ? output : this_invalidInputOutput"/>
             </transition>
-            <transition target="valid_value" viz:sourceHandle="right" viz:targetHandle="right" cond="this_invalidInputCount != this_maxInvalidInputOccurences"/>
+            <transition target="valid_value" viz:sourceHandle="right" viz:targetHandle="right" cond="this_invalidInputCount &lt; this_maxInvalidInputOccurences"/>
           </state>
           <state id="valid_value" viz:xywh="-46,279,252,80">
             <onentry>
@@ -157,9 +159,8 @@
             <transition event="vector" type="internal">
               <assign location="output" expr="this_buffer_output"/>
             </transition>
-            <transition target="invalid_value" viz:sourceHandle="left" viz:targetHandle="left" cond="this_invalidInputCount == this_maxInvalidInputOccurences"/>
+            <transition target="invalid_value" viz:sourceHandle="left" viz:targetHandle="left" cond="this_invalidInputCount &gt;= this_maxInvalidInputOccurences"/>
           </state>
-          
         </state>
         <state id="off" viz:xywh="114,20,160,80">
           <transition event="vector" type="internal">
