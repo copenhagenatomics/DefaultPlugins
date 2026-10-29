@@ -1,4 +1,4 @@
-<scxml xmlns="http://www.w3.org/2005/07/scxml" xmlns:viz="http://visual-scxml-editor/metadata" version="1.0" name="pid">
+<scxml xmlns="http://www.w3.org/2005/07/scxml" xmlns:viz="http://visual-scxml-editor/metadata" version="1.0" name="pid" initial="mainregion">
   <datamodel>
     <data expr="0.0" id="input"/>
     <data expr="0.0" id="output"/>
