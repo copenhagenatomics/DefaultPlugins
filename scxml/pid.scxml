@@ -11,16 +11,16 @@
     <data expr="40" id="conf_trackingTime"/>
     <data expr="0.0" id="conf_minOutput"/>
     <data expr="0.0" id="conf_maxOutput"/>
-    <data expr="-1" id="conf_invalidInputMode"/>
-    <data expr="-1" id="conf_minValidInput"/>
-    <data expr="-1" id="conf_maxValidInput"/>
-    <data expr="-1" id="conf_maxInvalidInputOccurences"/>
-    <data expr="-1" id="conf_invalidInputOutput"/>
+    <data expr="-1" id="conf_invalidInputMode" confType="int"/>
+    <data expr="-1" id="conf_minValidInput" confType="double"/>
+    <data expr="-1" id="conf_maxValidInput" confType="double"/>
+    <data expr="-1" id="conf_maxInvalidInputOccurences" confType="int"/>
+    <data expr="-1.0" id="conf_invalidInputOutput" confType="double"/>
     <data expr="0" id="this_invalidInputMode"/>
-    <data expr="0" id="this_minValidInput"/>
-    <data expr="0" id="this_maxValidInput"/>
+    <data expr="0.0" id="this_minValidInput"/>
+    <data expr="0.0" id="this_maxValidInput"/>
     <data expr="0" id="this_maxInvalidInputOccurences"/>
-    <data expr="0" id="this_invalidInputOutput"/>
+    <data expr="0.0" id="this_invalidInputOutput"/>
     <data expr="0" id="this_invalidInputCount"/>
     <data expr="false" id="this_invalidInputMode_error"/>
     <data expr="false" id="this_validInputRange_error"/>
