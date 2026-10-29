@@ -12,8 +12,8 @@
     <data expr="0.0" id="conf_minOutput"/>
     <data expr="0.0" id="conf_maxOutput"/>
     <data expr="-1" id="conf_invalidInputMode"/>
-    <data expr="-1" id="conf_minvalidInput"/>
-    <data expr="-1" id="conf_maxValidValue"/>
+    <data expr="-1" id="conf_minValidInput"/>
+    <data expr="-1" id="conf_maxValidInput"/>
     <data expr="-1" id="conf_maxInvalidInputOccurences"/>
     <data expr="-1" id="conf_invalidInputOutput"/>
     <data expr="0" id="pid_invalidInputMode"/>
@@ -55,8 +55,8 @@
       <assign location="pid_minOutput" expr="conf_minOutput"/>
       <assign location="pid_maxOutput" expr="conf_maxOutput"/>
       <assign location="pid_u0" expr="conf_minOutput"/>
-      <assign location="pid_minValidInput" expr="conf_minvalidInput"/>
-      <assign location="pid_maxValidInput" expr="conf_maxValidValue"/>
+      <assign location="pid_minValidInput" expr="conf_minValidInput"/>
+      <assign location="pid_maxValidInput" expr="conf_maxValidInput"/>
       <assign location="pid_maxInvalidInputOccurences" expr="conf_maxInvalidInputOccurences"/>
       <assign location="pid_invalidInputMode" expr="conf_invalidInputMode"/>
       <assign location="pid_invalidInputOutput" expr="conf_invalidInputOutput"/>
