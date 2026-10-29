@@ -1,8 +1,8 @@
 <scxml xmlns="http://www.w3.org/2005/07/scxml" xmlns:viz="http://visual-scxml-editor/metadata" version="1.0" name="pid" initial="mainregion">
   <datamodel>
-    <data expr="0.0" id="this_input"/>
-    <data expr="0.0" id="this_output"/>
-    <data expr="0.0" id="this_target"/>
+    <data expr="0.0" id="input"/>
+    <data expr="0.0" id="output"/>
+    <data expr="0.0" id="target"/>
     <data expr="0.1" id="conf_proportionalGain"/>
     <data expr="600.0" id="conf_integralTime"/>
     <data expr="0.0" id="conf_derivativeTime"/>
@@ -73,7 +73,7 @@
     </state>
     <state id="alert_ack" viz:xywh="218,-22,166,80">
       <onentry>
-        <assign location="this_output" expr="0.0"/>
+        <assign location="output" expr="0.0"/>
         <assign location="this_pidoperation" expr="0"/>
         <assign location="this_errorValue" expr="0"/>
         <assign location="this_errorminus1" expr="0"/>
@@ -85,7 +85,7 @@
         <assign location="this_buffer_output" expr="0"/>
       </onentry>
       <transition event="vector" type="internal">
-        <assign location="this_output" expr="0.0"/>
+        <assign location="output" expr="0.0"/>
       </transition>
       <transition event="ack" target="operation" viz:sourceHandle="bottom" viz:targetHandle="top"/>
     </state>
@@ -107,7 +107,7 @@
           <transition target="calculate_values" type="internal"/>
         </initial>
         <state id="calculate_values" viz:xywh="20,140,321,80" initial="valid_value">
-          <transition cond="this_target == 0" target="off" viz:sourceHandle="top" viz:targetHandle="bottom"/>
+          <transition cond="target == 0" target="off" viz:sourceHandle="top" viz:targetHandle="bottom"/>
           <state id="invalid_value" viz:xywh="50,100,215,80">
             <onentry>
               <assign location="this_controlPeriod" expr="this_controlPeriod &gt;= 0.1 ? this_controlPeriod : 0.1"/>
@@ -121,10 +121,10 @@
               <assign location="this_D" expr="this_invalidInputMode == 0 ? this_D : 0"/>
               <assign location="this_controlValue" expr="this_invalidInputMode == 0 ? this_controlValue : 0"/>
               <assign location="this_buffer_output" expr="this_invalidInputMode == 0 ? this_buffer_output : 0"/>
-              <assign location="this_output" expr="this_invalidInputMode == 0 ? this_output : this_invalidInputOutput"/>
+              <assign location="output" expr="this_invalidInputMode == 0 ? output : this_invalidInputOutput"/>
             </onentry>
             <transition event="vector" type="internal">
-              <assign location="this_output" expr="this_invalidInputMode == 0 ? this_output : this_invalidInputOutput"/>
+              <assign location="output" expr="this_invalidInputMode == 0 ? output : this_invalidInputOutput"/>
             </transition>
             <transition target="valid_value" viz:sourceHandle="right" viz:targetHandle="right" cond="this_invalidInputCount != this_maxInvalidInputOccurences"/>
           </state>
@@ -135,7 +135,7 @@
               <assign location="this_trackingTime" expr="this_trackingTime &gt;= 0.1 ? this_trackingTime : 0.1"/>
               <assign location="this_u0Percentage" expr="((this_u0 - this_minOutput) / (this_maxOutput - this_minOutput)) * 100.0"/>
               <assign location="this_errorminus1" expr="this_errorValue"/>
-              <assign location="this_errorValue" expr="this_target - this_input"/>
+              <assign location="this_errorValue" expr="target - input"/>
               <assign location="this_P" expr="this_proportionalGain * this_errorValue"/>
               <assign location="this_I" expr="this_I + (this_proportionalGain * this_controlPeriod / this_integralTime) * this_errorValue"/>
               <assign location="this_D" expr="((this_proportionalGain * this_derivativeTime) / this_controlPeriod) * (this_errorValue - this_errorminus1)"/>
@@ -146,24 +146,24 @@
               <assign location="this_buffer_output" expr="this_minOutput + (this_maxOutput - this_minOutput) * this_controlValue / 100.0"/>
               <assign location="this_buffer_output" expr="this_buffer_output &gt; this_maxOutput ? this_maxOutput : this_buffer_output"/>
               <assign location="this_buffer_output" expr="this_buffer_output &lt; this_minOutput ? this_minOutput : this_buffer_output"/>
-              <assign location="this_output" expr="this_buffer_output"/>
+              <assign location="output" expr="this_buffer_output"/>
             </onentry>
             <transition event="vector" type="internal">
-              <assign location="this_output" expr="this_buffer_output"/>
+              <assign location="output" expr="this_buffer_output"/>
             </transition>
             <transition target="invalid_value" viz:sourceHandle="left" viz:targetHandle="left" cond="this_invalidInputCount == this_maxInvalidInputOccurences"/>
           </state>
           <onentry>
-            <assign location="this_invalidInputCount" expr="(this_invalidInputMode != -1 &amp;&amp; (this_input &lt; this_minValidInput || this_input &gt; this_maxValidInput)) ? this_invalidInputCount + 1 : 0"/>
+            <assign location="this_invalidInputCount" expr="(this_invalidInputMode != -1 &amp;&amp; (input &lt; this_minValidInput || input &gt; this_maxValidInput)) ? this_invalidInputCount + 1 : 0"/>
           </onentry>
         </state>
         <state id="off" viz:xywh="114,20,160,80">
           <transition event="vector" type="internal">
-            <assign location="this_output" expr="this_buffer_output"/>
+            <assign location="output" expr="this_buffer_output"/>
           </transition>
-          <transition cond="this_target != 0" target="calculate_values" viz:sourceHandle="right" viz:targetHandle="right"/>
+          <transition cond="target != 0" target="calculate_values" viz:sourceHandle="right" viz:targetHandle="right"/>
           <onentry>
-            <assign location="this_output" expr="0.0"/>
+            <assign location="output" expr="0.0"/>
             <assign location="this_pidoperation" expr="0"/>
             <assign location="this_errorValue" expr="0"/>
             <assign location="this_errorminus1" expr="0"/>
@@ -182,13 +182,13 @@
           <send event="trigger_next_period_t_0_timeEvent_0" delayexpr="conf_offTime * 1000"/>
         </onentry>
         <onentry>
-          <assign location="this_output" expr="0"/>
+          <assign location="output" expr="0"/>
         </onentry>
         <onexit>
           <cancel sendid="trigger_next_period_t_0_timeEvent_0"/>
         </onexit>
         <transition event="vector" type="internal">
-          <assign location="this_output" expr="0"/>
+          <assign location="output" expr="0"/>
         </transition>
         <transition event="trigger_next_period_t_0_timeEvent_0" target="run_when_target_is_set" viz:sourceHandle="right" viz:targetHandle="right"/>
       </state>
