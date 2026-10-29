@@ -1,8 +1,8 @@
-<scxml xmlns="http://www.w3.org/2005/07/scxml" xmlns:viz="http://visual-scxml-editor/metadata" version="1.0" name="main" initial="check_config">
+<scxml xmlns="http://www.w3.org/2005/07/scxml" xmlns:viz="http://visual-scxml-editor/metadata" version="1.0" name="pid" initial="mainregion">
   <datamodel>
-    <data expr="0.0" id="input"/>
-    <data expr="0.0" id="output"/>
-    <data expr="0.0" id="target"/>
+    <data expr="0.0" id="this_input"/>
+    <data expr="0.0" id="this_output"/>
+    <data expr="0.0" id="this_target"/>
     <data expr="0.1" id="conf_proportionalGain"/>
     <data expr="600.0" id="conf_integralTime"/>
     <data expr="0.0" id="conf_derivativeTime"/>
@@ -16,177 +16,183 @@
     <data expr="-1" id="conf_maxValidInput"/>
     <data expr="-1" id="conf_maxInvalidInputOccurences"/>
     <data expr="-1" id="conf_invalidInputOutput"/>
-    <data expr="0" id="pid_invalidInputMode"/>
-    <data expr="0" id="pid_minValidInput"/>
-    <data expr="0" id="pid_maxValidInput"/>
-    <data expr="0" id="pid_maxInvalidInputOccurences"/>
-    <data expr="0" id="pid_invalidInputOutput"/>
-    <data expr="0" id="pid_invalidInputCount"/>
-    <data expr="false" id="pid_invalidInputMode_error"/>
-    <data expr="false" id="pid_validInputRange_error"/>
-    <data expr="false" id="pid_maxInvalidInputOccurences_error"/>
-    <data expr="false" id="pid_invalidInputOutput_error"/>
-    <data expr="false" id="pid_pidoperation"/>
-    <data expr="0.0" id="pid_proportionalGain"/>
-    <data expr="0.0" id="pid_controlPeriod"/>
-    <data expr="0.0" id="pid_integralTime"/>
-    <data expr="0.0" id="pid_derivativeTime"/>
-    <data expr="0.0" id="pid_trackingTime"/>
-    <data expr="0.0" id="pid_minOutput"/>
-    <data expr="0.0" id="pid_maxOutput"/>
-    <data expr="0.0" id="pid_u0"/>
-    <data expr="0.0" id="pid_errorValue"/>
-    <data expr="0.0" id="pid_errorminus1"/>
-    <data expr="0.0" id="pid_P"/>
-    <data expr="0.0" id="pid_I"/>
-    <data expr="0.0" id="pid_D"/>
-    <data expr="0.0" id="pid_u0Percentage"/>
-    <data expr="0.0" id="pid_controlValue"/>
-    <data expr="0.0" id="pid_buffer_output"/>
+    <data expr="0" id="this_pid_invalidInputMode"/>
+    <data expr="0" id="this_pid_minValidInput"/>
+    <data expr="0" id="this_pid_maxValidInput"/>
+    <data expr="0" id="this_pid_maxInvalidInputOccurences"/>
+    <data expr="0" id="this_pid_invalidInputOutput"/>
+    <data expr="0" id="this_pid_invalidInputCount"/>
+    <data expr="false" id="this_pid_invalidInputMode_error"/>
+    <data expr="false" id="this_pid_validInputRange_error"/>
+    <data expr="false" id="this_pid_maxInvalidInputOccurences_error"/>
+    <data expr="false" id="this_pid_invalidInputOutput_error"/>
+    <data expr="0" id="this_pid_pidoperation"/>
+    <data expr="0.0" id="this_pid_proportionalGain"/>
+    <data expr="0.0" id="this_pid_controlPeriod"/>
+    <data expr="0.0" id="this_pid_integralTime"/>
+    <data expr="0.0" id="this_pid_derivativeTime"/>
+    <data expr="0.0" id="this_pid_trackingTime"/>
+    <data expr="0.0" id="this_pid_minOutput"/>
+    <data expr="0.0" id="this_pid_maxOutput"/>
+    <data expr="0.0" id="this_pid_u0"/>
+    <data expr="0.0" id="this_pid_errorValue"/>
+    <data expr="0.0" id="this_pid_errorminus1"/>
+    <data expr="0.0" id="this_pid_P"/>
+    <data expr="0.0" id="this_pid_I"/>
+    <data expr="0.0" id="this_pid_D"/>
+    <data expr="0.0" id="this_pid_u0Percentage"/>
+    <data expr="0.0" id="this_pid_controlValue"/>
+    <data expr="0.0" id="this_pid_buffer_output"/>
   </datamodel>
-  <state id="check_config" viz:xywh="-169,-102,272,80">
-    <transition target="operation" viz:sourceHandle="bottom" viz:targetHandle="left" cond="pid_maxInvalidInputOccurences_error == false &amp;&amp; pid_validInputRange_error == false &amp;&amp; pid_invalidInputOutput_error == false &amp;&amp; pid_invalidInputMode_error == false"/>
-    <onentry>
-      <assign location="pid_proportionalGain" expr="conf_proportionalGain"/>
-      <assign location="pid_controlPeriod" expr="conf_controlPeriod"/>
-      <assign location="pid_integralTime" expr="conf_integralTime"/>
-      <assign location="pid_derivativeTime" expr="conf_derivativeTime"/>
-      <assign location="pid_trackingTime" expr="conf_trackingTime"/>
-      <assign location="pid_minOutput" expr="conf_minOutput"/>
-      <assign location="pid_maxOutput" expr="conf_maxOutput"/>
-      <assign location="pid_u0" expr="conf_minOutput"/>
-      <assign location="pid_minValidInput" expr="conf_minValidInput"/>
-      <assign location="pid_maxValidInput" expr="conf_maxValidInput"/>
-      <assign location="pid_maxInvalidInputOccurences" expr="conf_maxInvalidInputOccurences"/>
-      <assign location="pid_invalidInputMode" expr="conf_invalidInputMode"/>
-      <assign location="pid_invalidInputOutput" expr="conf_invalidInputOutput"/>
-      <assign location="pid_invalidInputMode_error" expr="pid_invalidInputMode != -1 &amp;&amp; pid_invalidInputMode != 0 &amp;&amp; pid_invalidInputMode != 1 ? true : false"/>
-      <assign location="pid_validInputRange_error" expr="pid_invalidInputMode != -1 &amp;&amp; pid_minValidInput &gt;= pid_maxValidInput ? true : false"/>
-      <assign location="pid_maxInvalidInputOccurences_error" expr="pid_invalidInputMode != -1 &amp;&amp; pid_maxInvalidInputOccurences &lt;= 0 ? true : false"/>
-      <assign location="pid_invalidInputOutput_error" expr="pid_invalidInputMode != -1 &amp;&amp; pid_invalidInputMode == 1 &amp;&amp; (pid_invalidInputOutput &lt; pid_minOutput || pid_invalidInputOutput &gt; pid_maxOutput) ? true : false"/>
-    </onentry>
-  </state>
-  <state id="alert_ack" viz:xywh="218,-22,166,80">
-    <onentry>
-      <assign location="output" expr="0.0"/>
-      <assign location="pid_pidoperation" expr="0"/>
-      <assign location="pid_errorValue" expr="0"/>
-      <assign location="pid_errorminus1" expr="0"/>
-      <assign location="pid_P" expr="0"/>
-      <assign location="pid_I" expr="0"/>
-      <assign location="pid_D" expr="0"/>
-      <assign location="pid_u0Percentage" expr="0"/>
-      <assign location="pid_controlValue" expr="0"/>
-      <assign location="pid_buffer_output" expr="0"/>
-    </onentry>
-    <transition event="vector" type="internal">
-      <assign location="output" expr="0.0"/>
-    </transition>
-    <transition event="ack" target="operation" viz:sourceHandle="bottom" viz:targetHandle="top"/>
-  </state>
-  <state id="operation" viz:xywh="200,119,200,120">
-    <onentry>
-      <assign location="pid_pidoperation" expr="1"/>
-    </onentry>
+  <state id="mainregion" viz:xywh="20,20,200,120">
     <initial>
-      <transition target="run_when_target_is_set" type="internal"/>
-    </initial>
-    <state id="run_when_target_is_set" viz:xywh="20,140,397,120">
-      <onentry>
-        <send event="run_when_target_is_set_t_0_timeEvent_0" delayexpr="(conf_controlPeriod - conf_offTime) * 1000"/>
-      </onentry>
-      <onexit>
-        <cancel sendid="run_when_target_is_set_t_0_timeEvent_0"/>
-      </onexit>
-      <initial>
-        <transition target="calculate_values" type="internal"/>
-      </initial>
-      <state id="calculate_values" viz:xywh="20,140,301,80" initial="valid_value">
-        <transition cond="target == 0" target="off" viz:sourceHandle="top" viz:targetHandle="bottom"/>
-        <state id="invalid_value" viz:xywh="50,100,215,80">
-          <onentry>
-            <assign location="pid_controlPeriod" expr="pid_controlPeriod &gt;= 0.1 ? pid_controlPeriod : 0.1"/>
-            <assign location="pid_integralTime" expr="pid_integralTime &gt;= 0.1 ? pid_integralTime : 0.1"/>
-            <assign location="pid_trackingTime" expr="pid_trackingTime &gt;= 0.1 ? pid_trackingTime : 0.1"/>
-            <assign location="pid_u0Percentage" expr="((pid_u0 - pid_minOutput) / (pid_maxOutput - pid_minOutput)) * 100.0"/>
-            <assign location="pid_errorminus1" expr="pid_invalidInputMode == 0 ? pid_errorminus1 : 0"/>
-            <assign location="pid_errorValue" expr="pid_invalidInputMode == 0 ? pid_errorValue : 0"/>
-            <assign location="pid_P" expr="pid_invalidInputMode == 0 ? pid_P : 0"/>
-            <assign location="pid_I" expr="pid_invalidInputMode == 0 ? pid_I : 0"/>
-            <assign location="pid_D" expr="pid_invalidInputMode == 0 ? pid_D : 0"/>
-            <assign location="pid_controlValue" expr="pid_invalidInputMode == 0 ? pid_controlValue : 0"/>
-            <assign location="pid_buffer_output" expr="pid_invalidInputMode == 0 ? pid_buffer_output : 0"/>
-            <assign location="output" expr="pid_invalidInputMode == 0 ? output : pid_invalidInputOutput"/>
-          </onentry>
-          <transition event="vector" type="internal">
-            <assign location="output" expr="pid_invalidInputMode == 0 ? output : pid_invalidInputOutput"/>
-          </transition>
-          <transition target="valid_value" viz:sourceHandle="right" viz:targetHandle="right" cond="pid_invalidInputCount != pid_maxInvalidInputOccurences"/>
-        </state>
-        <state id="valid_value" viz:xywh="-46,279,160,80">
-          <onentry>
-            <assign location="pid_controlPeriod" expr="pid_controlPeriod &gt;= 0.1 ? pid_controlPeriod : 0.1"/>
-            <assign location="pid_integralTime" expr="pid_integralTime &gt;= 0.1 ? pid_integralTime : 0.1"/>
-            <assign location="pid_trackingTime" expr="pid_trackingTime &gt;= 0.1 ? pid_trackingTime : 0.1"/>
-            <assign location="pid_u0Percentage" expr="((pid_u0 - pid_minOutput) / (pid_maxOutput - pid_minOutput)) * 100.0"/>
-            <assign location="pid_errorminus1" expr="pid_errorValue"/>
-            <assign location="pid_errorValue" expr="target - input"/>
-            <assign location="pid_P" expr="pid_proportionalGain * pid_errorValue"/>
-            <assign location="pid_I" expr="pid_I + (pid_proportionalGain * pid_controlPeriod / pid_integralTime) * pid_errorValue"/>
-            <assign location="pid_D" expr="((pid_proportionalGain * pid_derivativeTime) / pid_controlPeriod) * (pid_errorValue - pid_errorminus1)"/>
-            <assign location="pid_controlValue" expr="pid_u0Percentage + pid_P + pid_I + pid_D"/>
-            <assign location="pid_I" expr="pid_controlValue &gt; 100.0 ? pid_I - ((pid_controlValue - 100.0) * pid_controlPeriod / pid_trackingTime) : pid_I"/>
-            <assign location="pid_I" expr="pid_controlValue &lt; 0.0 ? pid_I - (pid_controlValue * pid_controlPeriod / pid_trackingTime) : pid_I"/>
-            <assign location="pid_controlValue" expr="pid_u0Percentage + pid_P + pid_I + pid_D"/>
-            <assign location="pid_buffer_output" expr="pid_minOutput + (pid_maxOutput - pid_minOutput) * pid_controlValue / 100.0"/>
-            <assign location="pid_buffer_output" expr="pid_buffer_output &gt; pid_maxOutput ? pid_maxOutput : pid_buffer_output"/>
-            <assign location="pid_buffer_output" expr="pid_buffer_output &lt; pid_minOutput ? pid_minOutput : pid_buffer_output"/>
-            <assign location="output" expr="pid_buffer_output"/>
-          </onentry>
-          <transition event="vector" type="internal">
-            <assign location="output" expr="pid_buffer_output"/>
-          </transition>
-          <transition target="invalid_value" viz:sourceHandle="left" viz:targetHandle="left" cond="pid_invalidInputCount == pid_maxInvalidInputOccurences"/>
-        </state>
-        <onentry>
-          <assign location="pid_invalidInputCount" expr="(pid_invalidInputMode != -1 &amp;&amp; (input &lt; pid_minValidInput || input &gt; pid_maxValidInput)) ? pid_invalidInputCount + 1 : 0"/>
-        </onentry>
-      </state>
-      <state id="off" viz:xywh="114,20,160,80">
-        <transition event="vector" type="internal">
-          <assign location="output" expr="pid_buffer_output"/>
-        </transition>
-        <transition cond="target != 0" target="calculate_values" viz:sourceHandle="right" viz:targetHandle="right"/>
-        <onentry>
-          <assign location="output" expr="0.0"/>
-          <assign location="pid_pidoperation" expr="0"/>
-          <assign location="pid_errorValue" expr="0"/>
-          <assign location="pid_errorminus1" expr="0"/>
-          <assign location="pid_P" expr="0"/>
-          <assign location="pid_I" expr="0"/>
-          <assign location="pid_D" expr="0"/>
-          <assign location="pid_u0Percentage" expr="0"/>
-          <assign location="pid_controlValue" expr="0"/>
-          <assign location="pid_buffer_output" expr="0"/>
-        </onentry>
-      </state>
-      <transition event="run_when_target_is_set_t_0_timeEvent_0" target="trigger_next_period" viz:sourceHandle="top" viz:targetHandle="bottom"/>
-    </state>
-    <state id="trigger_next_period" viz:xywh="110,20,263,80">
-      <onentry>
-        <send event="trigger_next_period_t_0_timeEvent_0" delayexpr="conf_offTime * 1000"/>
-      </onentry>
-      <onentry>
-        <assign location="output" expr="0"/>
-      </onentry>
-      <onexit>
-        <cancel sendid="trigger_next_period_t_0_timeEvent_0"/>
-      </onexit>
-      <transition event="vector" type="internal">
-        <assign location="output" expr="0"/>
+      <transition target="check_config" type="internal">
       </transition>
-      <transition event="trigger_next_period_t_0_timeEvent_0" target="run_when_target_is_set" viz:sourceHandle="right" viz:targetHandle="right"/>
+    </initial>
+    <state id="check_config" viz:xywh="-169,-102,272,80">
+      <transition target="operation" viz:sourceHandle="bottom" viz:targetHandle="left" cond="this_pid_maxInvalidInputOccurences_error == false &amp;&amp; this_pid_validInputRange_error == false &amp;&amp; this_pid_invalidInputOutput_error == false &amp;&amp; this_pid_invalidInputMode_error == false"/>
+      <onentry>
+        <assign location="this_pid_proportionalGain" expr="conf_proportionalGain"/>
+        <assign location="this_pid_controlPeriod" expr="conf_controlPeriod"/>
+        <assign location="this_pid_integralTime" expr="conf_integralTime"/>
+        <assign location="this_pid_derivativeTime" expr="conf_derivativeTime"/>
+        <assign location="this_pid_trackingTime" expr="conf_trackingTime"/>
+        <assign location="this_pid_minOutput" expr="conf_minOutput"/>
+        <assign location="this_pid_maxOutput" expr="conf_maxOutput"/>
+        <assign location="this_pid_u0" expr="conf_minOutput"/>
+        <assign location="this_pid_minValidInput" expr="conf_minValidInput"/>
+        <assign location="this_pid_maxValidInput" expr="conf_maxValidInput"/>
+        <assign location="this_pid_maxInvalidInputOccurences" expr="conf_maxInvalidInputOccurences"/>
+        <assign location="this_pid_invalidInputMode" expr="conf_invalidInputMode"/>
+        <assign location="this_pid_invalidInputOutput" expr="conf_invalidInputOutput"/>
+        <assign location="this_pid_invalidInputMode_error" expr="this_pid_invalidInputMode != -1 &amp;&amp; this_pid_invalidInputMode != 0 &amp;&amp; this_pid_invalidInputMode != 1 ? true : false"/>
+        <assign location="this_pid_validInputRange_error" expr="this_pid_invalidInputMode != -1 &amp;&amp; this_pid_minValidInput &gt;= this_pid_maxValidInput ? true : false"/>
+        <assign location="this_pid_maxInvalidInputOccurences_error" expr="this_pid_invalidInputMode != -1 &amp;&amp; this_pid_maxInvalidInputOccurences &lt;= 0 ? true : false"/>
+        <assign location="this_pid_invalidInputOutput_error" expr="this_pid_invalidInputMode != -1 &amp;&amp; this_pid_invalidInputMode == 1 &amp;&amp; (this_pid_invalidInputOutput &lt; this_pid_minOutput || this_pid_invalidInputOutput &gt; this_pid_maxOutput) ? true : false"/>
+      </onentry>
     </state>
-    <transition event="emergencyshutdown" target="alert_ack" viz:sourceHandle="right" viz:targetHandle="right"/>
+    <state id="alert_ack" viz:xywh="218,-22,166,80">
+      <onentry>
+        <assign location="this_output" expr="0.0"/>
+        <assign location="this_pid_pidoperation" expr="0"/>
+        <assign location="this_pid_errorValue" expr="0"/>
+        <assign location="this_pid_errorminus1" expr="0"/>
+        <assign location="this_pid_P" expr="0"/>
+        <assign location="this_pid_I" expr="0"/>
+        <assign location="this_pid_D" expr="0"/>
+        <assign location="this_pid_u0Percentage" expr="0"/>
+        <assign location="this_pid_controlValue" expr="0"/>
+        <assign location="this_pid_buffer_output" expr="0"/>
+      </onentry>
+      <transition event="vector" type="internal">
+        <assign location="this_output" expr="0.0"/>
+      </transition>
+      <transition event="ack" target="operation" viz:sourceHandle="bottom" viz:targetHandle="top"/>
+    </state>
+    <state id="operation" viz:xywh="200,119,200,120">
+      <onentry>
+        <assign location="this_pid_pidoperation" expr="1"/>
+      </onentry>
+      <initial>
+        <transition target="run_when_target_is_set" type="internal"/>
+      </initial>
+      <state id="run_when_target_is_set" viz:xywh="20,140,397,120">
+        <onentry>
+          <send event="run_when_target_is_set_t_0_timeEvent_0" delayexpr="(conf_controlPeriod - conf_offTime) * 1000"/>
+        </onentry>
+        <onexit>
+          <cancel sendid="run_when_target_is_set_t_0_timeEvent_0"/>
+        </onexit>
+        <initial>
+          <transition target="calculate_values" type="internal"/>
+        </initial>
+        <state id="calculate_values" viz:xywh="20,140,321,80" initial="valid_value">
+          <transition cond="this_target == 0" target="off" viz:sourceHandle="top" viz:targetHandle="bottom"/>
+          <state id="invalid_value" viz:xywh="50,100,215,80">
+            <onentry>
+              <assign location="this_pid_controlPeriod" expr="this_pid_controlPeriod &gt;= 0.1 ? this_pid_controlPeriod : 0.1"/>
+              <assign location="this_pid_integralTime" expr="this_pid_integralTime &gt;= 0.1 ? this_pid_integralTime : 0.1"/>
+              <assign location="this_pid_trackingTime" expr="this_pid_trackingTime &gt;= 0.1 ? this_pid_trackingTime : 0.1"/>
+              <assign location="this_pid_u0Percentage" expr="((this_pid_u0 - this_pid_minOutput) / (this_pid_maxOutput - this_pid_minOutput)) * 100.0"/>
+              <assign location="this_pid_errorminus1" expr="this_pid_invalidInputMode == 0 ? this_pid_errorminus1 : 0"/>
+              <assign location="this_pid_errorValue" expr="this_pid_invalidInputMode == 0 ? this_pid_errorValue : 0"/>
+              <assign location="this_pid_P" expr="this_pid_invalidInputMode == 0 ? this_pid_P : 0"/>
+              <assign location="this_pid_I" expr="this_pid_invalidInputMode == 0 ? this_pid_I : 0"/>
+              <assign location="this_pid_D" expr="this_pid_invalidInputMode == 0 ? this_pid_D : 0"/>
+              <assign location="this_pid_controlValue" expr="this_pid_invalidInputMode == 0 ? this_pid_controlValue : 0"/>
+              <assign location="this_pid_buffer_output" expr="this_pid_invalidInputMode == 0 ? this_pid_buffer_output : 0"/>
+              <assign location="this_output" expr="this_pid_invalidInputMode == 0 ? this_output : this_pid_invalidInputOutput"/>
+            </onentry>
+            <transition event="vector" type="internal">
+              <assign location="this_output" expr="this_pid_invalidInputMode == 0 ? this_output : this_pid_invalidInputOutput"/>
+            </transition>
+            <transition target="valid_value" viz:sourceHandle="right" viz:targetHandle="right" cond="this_pid_invalidInputCount != this_pid_maxInvalidInputOccurences"/>
+          </state>
+          <state id="valid_value" viz:xywh="-46,279,252,80">
+            <onentry>
+              <assign location="this_pid_controlPeriod" expr="this_pid_controlPeriod &gt;= 0.1 ? this_pid_controlPeriod : 0.1"/>
+              <assign location="this_pid_integralTime" expr="this_pid_integralTime &gt;= 0.1 ? this_pid_integralTime : 0.1"/>
+              <assign location="this_pid_trackingTime" expr="this_pid_trackingTime &gt;= 0.1 ? this_pid_trackingTime : 0.1"/>
+              <assign location="this_pid_u0Percentage" expr="((this_pid_u0 - this_pid_minOutput) / (this_pid_maxOutput - this_pid_minOutput)) * 100.0"/>
+              <assign location="this_pid_errorminus1" expr="this_pid_errorValue"/>
+              <assign location="this_pid_errorValue" expr="this_target - this_input"/>
+              <assign location="this_pid_P" expr="this_pid_proportionalGain * this_pid_errorValue"/>
+              <assign location="this_pid_I" expr="this_pid_I + (this_pid_proportionalGain * this_pid_controlPeriod / this_pid_integralTime) * this_pid_errorValue"/>
+              <assign location="this_pid_D" expr="((this_pid_proportionalGain * this_pid_derivativeTime) / this_pid_controlPeriod) * (this_pid_errorValue - this_pid_errorminus1)"/>
+              <assign location="this_pid_controlValue" expr="this_pid_u0Percentage + this_pid_P + this_pid_I + this_pid_D"/>
+              <assign location="this_pid_I" expr="this_pid_controlValue &gt; 100.0 ? this_pid_I - ((this_pid_controlValue - 100.0) * this_pid_controlPeriod / this_pid_trackingTime) : this_pid_I"/>
+              <assign location="this_pid_I" expr="this_pid_controlValue &lt; 0.0 ? this_pid_I - (this_pid_controlValue * this_pid_controlPeriod / this_pid_trackingTime) : this_pid_I"/>
+              <assign location="this_pid_controlValue" expr="this_pid_u0Percentage + this_pid_P + this_pid_I + this_pid_D"/>
+              <assign location="this_pid_buffer_output" expr="this_pid_minOutput + (this_pid_maxOutput - this_pid_minOutput) * this_pid_controlValue / 100.0"/>
+              <assign location="this_pid_buffer_output" expr="this_pid_buffer_output &gt; this_pid_maxOutput ? this_pid_maxOutput : this_pid_buffer_output"/>
+              <assign location="this_pid_buffer_output" expr="this_pid_buffer_output &lt; this_pid_minOutput ? this_pid_minOutput : this_pid_buffer_output"/>
+              <assign location="this_output" expr="this_pid_buffer_output"/>
+            </onentry>
+            <transition event="vector" type="internal">
+              <assign location="this_output" expr="this_pid_buffer_output"/>
+            </transition>
+            <transition target="invalid_value" viz:sourceHandle="left" viz:targetHandle="left" cond="this_pid_invalidInputCount == this_pid_maxInvalidInputOccurences"/>
+          </state>
+          <onentry>
+            <assign location="this_pid_invalidInputCount" expr="(this_pid_invalidInputMode != -1 &amp;&amp; (this_input &lt; this_pid_minValidInput || this_input &gt; this_pid_maxValidInput)) ? this_pid_invalidInputCount + 1 : 0"/>
+          </onentry>
+        </state>
+        <state id="off" viz:xywh="114,20,160,80">
+          <transition event="vector" type="internal">
+            <assign location="this_output" expr="this_pid_buffer_output"/>
+          </transition>
+          <transition cond="this_target != 0" target="calculate_values" viz:sourceHandle="right" viz:targetHandle="right"/>
+          <onentry>
+            <assign location="this_output" expr="0.0"/>
+            <assign location="this_pid_pidoperation" expr="0"/>
+            <assign location="this_pid_errorValue" expr="0"/>
+            <assign location="this_pid_errorminus1" expr="0"/>
+            <assign location="this_pid_P" expr="0"/>
+            <assign location="this_pid_I" expr="0"/>
+            <assign location="this_pid_D" expr="0"/>
+            <assign location="this_pid_u0Percentage" expr="0"/>
+            <assign location="this_pid_controlValue" expr="0"/>
+            <assign location="this_pid_buffer_output" expr="0"/>
+          </onentry>
+        </state>
+        <transition event="run_when_target_is_set_t_0_timeEvent_0" target="trigger_next_period" viz:sourceHandle="top" viz:targetHandle="bottom"/>
+      </state>
+      <state id="trigger_next_period" viz:xywh="110,20,263,80">
+        <onentry>
+          <send event="trigger_next_period_t_0_timeEvent_0" delayexpr="conf_offTime * 1000"/>
+        </onentry>
+        <onentry>
+          <assign location="this_output" expr="0"/>
+        </onentry>
+        <onexit>
+          <cancel sendid="trigger_next_period_t_0_timeEvent_0"/>
+        </onexit>
+        <transition event="vector" type="internal">
+          <assign location="this_output" expr="0"/>
+        </transition>
+        <transition event="trigger_next_period_t_0_timeEvent_0" target="run_when_target_is_set" viz:sourceHandle="right" viz:targetHandle="right"/>
+      </state>
+      <transition event="emergencyshutdown" target="alert_ack" viz:sourceHandle="right" viz:targetHandle="right"/>
+    </state>
   </state>
 </scxml>
