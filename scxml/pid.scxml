@@ -1,4 +1,4 @@
-<scxml xmlns="http://www.w3.org/2005/07/scxml" xmlns:viz="http://visual-scxml-editor/metadata" version="1.0" name="pid" initial="mainregion">
+<scxml xmlns="http://www.w3.org/2005/07/scxml" xmlns:viz="http://visual-scxml-editor/metadata" version="1.0" name="pid">
   <datamodel>
     <data expr="0.0" id="input"/>
     <data expr="0.0" id="output"/>
@@ -12,8 +12,8 @@
     <data expr="0.0" id="conf_minOutput"/>
     <data expr="0.0" id="conf_maxOutput"/>
     <data expr="-1" id="conf_invalidInputMode" confType="int"/>
-    <data expr="-1" id="conf_minValidInput" confType="double"/>
-    <data expr="-1" id="conf_maxValidInput" confType="double"/>
+    <data expr="-1.0" id="conf_minValidInput" confType="double"/>
+    <data expr="-1.0" id="conf_maxValidInput" confType="double"/>
     <data expr="-1" id="conf_maxInvalidInputOccurences" confType="int"/>
     <data expr="-1.0" id="conf_invalidInputOutput" confType="double"/>
     <data expr="0" id="this_invalidInputMode"/>
@@ -46,8 +46,7 @@
   </datamodel>
   <state id="mainregion" viz:xywh="20,20,200,120">
     <initial>
-      <transition target="check_config" type="internal">
-      </transition>
+      <transition target="check_config" type="internal"/>
     </initial>
     <state id="check_config" viz:xywh="-387,-37,272,80">
       <transition target="operation" viz:sourceHandle="bottom" viz:targetHandle="left" cond="this_maxInvalidInputOccurences_error == false &amp;&amp; this_validInputRange_error == false &amp;&amp; this_invalidInputOutput_error == false &amp;&amp; this_invalidInputMode_error == false"/>
@@ -106,12 +105,10 @@
         <initial>
           <transition target="calculate_values" type="internal"/>
         </initial>
-        <state id="calculate_values" viz:xywh="20,140,321,80" initial="valid_value">
+        <state id="calculate_values" viz:xywh="20,140,321,80">
           <transition cond="target == 0" target="off" viz:sourceHandle="top" viz:targetHandle="bottom"/>
           <onentry>
             <assign location="this_invalidInputCount" expr="(this_invalidInputMode != -1 &amp;&amp; (input &lt; this_minValidInput || input &gt; this_maxValidInput)) ? (this_invalidInputCount + 1 &lt; this_maxInvalidInputOccurences ? this_invalidInputCount + 1 : this_maxInvalidInputOccurences) : 0"/>
-
-
           </onentry>
           <initial>
             <transition target="valid_value" type="internal"/>
