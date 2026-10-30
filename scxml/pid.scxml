@@ -156,7 +156,7 @@
             <transition event="vector" type="internal">
               <assign location="output" expr="this_buffer_output"/>
             </transition>
-            <transition target="invalid_value" viz:sourceHandle="left" viz:targetHandle="left" cond="this_invalidInputCount &gt;= this_maxInvalidInputOccurences"/>
+            <transition target="invalid_value" viz:sourceHandle="left" viz:targetHandle="left" cond="this_invalidInputCount == this_maxInvalidInputOccurences"/>
           </state>
         </state>
         <state id="off" viz:xywh="114,20,160,80">
