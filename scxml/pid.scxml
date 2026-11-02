@@ -104,6 +104,7 @@
             <transition target="valid_value" type="internal"/>
           </initial>
           <state id="invalid_value" viz:xywh="50,100,215,80">
+            <transition target="valid_value" viz:sourceHandle="right" viz:targetHandle="right" cond="this_invalidInputCount &lt; conf_maxInvalidInputOccurences"/>
             <onentry>
               <assign location="this_controlPeriod" expr="this_controlPeriod &gt;= 0.1 ? this_controlPeriod : 0.1"/>
               <assign location="this_integralTime" expr="this_integralTime &gt;= 0.1 ? this_integralTime : 0.1"/>
@@ -121,9 +122,9 @@
             <transition event="vector" type="internal">
               <assign location="output" expr="conf_invalidInputMode == 0 ? output : conf_invalidInputOutput"/>
             </transition>
-            <transition target="valid_value" viz:sourceHandle="right" viz:targetHandle="right" cond="this_invalidInputCount &lt; conf_maxInvalidInputOccurences"/>
           </state>
           <state id="valid_value" viz:xywh="-46,279,252,80">
+            <transition target="invalid_value" viz:sourceHandle="left" viz:targetHandle="left" cond="conf_invalidInputMode != -1 &amp;&amp; this_invalidInputCount &gt;= conf_maxInvalidInputOccurences"/>
             <onentry>
               <assign location="this_controlPeriod" expr="this_controlPeriod &gt;= 0.1 ? this_controlPeriod : 0.1"/>
               <assign location="this_integralTime" expr="this_integralTime &gt;= 0.1 ? this_integralTime : 0.1"/>
@@ -146,7 +147,6 @@
             <transition event="vector" type="internal">
               <assign location="output" expr="this_buffer_output"/>
             </transition>
-            <transition target="invalid_value" viz:sourceHandle="left" viz:targetHandle="left" cond="conf_invalidInputMode != -1 &amp;&amp; this_invalidInputCount &gt;= conf_maxInvalidInputOccurences"/>
           </state>
         </state>
         <state id="off" viz:xywh="114,20,160,80">
