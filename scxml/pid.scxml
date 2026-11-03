@@ -101,8 +101,14 @@
             <assign location="this_invalidInputCount" expr="(conf_invalidInputMode != -1 &amp;&amp; (input &lt; conf_minValidInput || input &gt; conf_maxValidInput)) ? this_invalidInputCount + 1 : 0"/>
           </onentry>
           <initial>
-            <transition target="valid_value" type="internal"/>
+            <transition target="check_input_validity" type="internal"/>
           </initial>
+          <state id="check_input_validity">
+            <transition target="invalid_value" cond="this_invalidInputMode != -1 &amp;&amp; this_invalidInputCount &gt;= this_maxInvalidInputOccurences">
+              <assign location="output" expr="this_buffer_output"/>
+            </transition>
+            <transition target="valid_value"/>
+          </state>
           <state id="invalid_value" viz:xywh="50,100,215,80">
             <transition target="valid_value" viz:sourceHandle="right" viz:targetHandle="right" cond="this_invalidInputCount &lt; conf_maxInvalidInputOccurences"/>
             <onentry>
