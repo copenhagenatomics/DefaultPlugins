@@ -98,32 +98,31 @@
         <state id="calculate_values" viz:xywh="20,140,321,80">
           <transition cond="target == 0" target="off" viz:sourceHandle="top" viz:targetHandle="bottom"/>
           <onentry>
-            <assign location="this_invalidInputCount" expr="(conf_invalidInputMode != -1 &amp;&amp; (input &lt; conf_minValidInput || input &gt; conf_maxValidInput)) ? this_invalidInputCount + 1 : 0"/>
+            <assign location="this_invalidInputCount" expr="(conf_invalidInputMode != -1 &amp;&amp; (input &lt; conf_minValidInput || input &gt; conf_maxValidInput)) ? (this_invalidInputCount + 1 &lt; conf_maxInvalidInputOccurences ? this_invalidInputCount + 1 : conf_maxInvalidInputOccurences) : 0"/>
           </onentry>
           <initial>
             <transition target="check_input_validity" type="internal"/>
           </initial>
           <state id="check_input_validity" viz:xywh="-658,178,342,80">
-            <transition target="invalid_value" viz:sourceHandle="right" viz:targetHandle="left" cond="conf_invalidInputMode != -1 &amp;&amp; this_invalidInputCount &gt;= conf_maxInvalidInputOccurences"/>
-            <transition target="valid_value" viz:sourceHandle="right" viz:targetHandle="left" cond="conf_invalidInputMode == -1 ||  this_invalidInputCount &lt; conf_maxInvalidInputOccurences"/>
+            <transition target="invalid_value" viz:sourceHandle="right" viz:targetHandle="left" cond="conf_invalidInputMode != -1 &amp;&amp; this_invalidInputCount &gt; 0"/>
+            <transition target="valid_value" viz:sourceHandle="right" viz:targetHandle="left" cond="conf_invalidInputMode == -1 || this_invalidInputCount == 0"/>
           </state>
           <state id="invalid_value" viz:xywh="-30,50,215,80">
             <transition event="vector" type="internal">
-              <assign location="output" expr="conf_invalidInputMode == 0 ? this_buffer_output : conf_invalidInputOutput"/>
+              <assign location="output" expr="conf_invalidInputMode == 1 &amp;&amp; this_invalidInputCount == conf_maxInvalidInputOccurences ? conf_invalidInputOutput : this_buffer_output"/>
             </transition>
             <onentry>
               <assign location="this_controlPeriod" expr="this_controlPeriod &gt;= 0.1 ? this_controlPeriod : 0.1"/>
               <assign location="this_integralTime" expr="this_integralTime &gt;= 0.1 ? this_integralTime : 0.1"/>
               <assign location="this_trackingTime" expr="this_trackingTime &gt;= 0.1 ? this_trackingTime : 0.1"/>
               <assign location="this_u0Percentage" expr="((this_u0 - this_minOutput) / (this_maxOutput - this_minOutput)) * 100.0"/>
-              <assign location="this_errorminus1" expr="conf_invalidInputMode == 0 ? this_errorminus1 : 0"/>
-              <assign location="this_errorValue" expr="conf_invalidInputMode == 0 ? this_errorValue : 0"/>
-              <assign location="this_P" expr="conf_invalidInputMode == 0 ? this_P : 0"/>
-              <assign location="this_I" expr="conf_invalidInputMode == 0 ? this_I : 0"/>
-              <assign location="this_D" expr="conf_invalidInputMode == 0 ? this_D : 0"/>
-              <assign location="this_controlValue" expr="conf_invalidInputMode == 0 ? this_controlValue : 0"/>
-              <assign location="this_buffer_output" expr="conf_invalidInputMode == 0 ? this_buffer_output : 0"/>
-              <assign location="output" expr="conf_invalidInputMode == 0 ? this_buffer_output : conf_invalidInputOutput"/>
+              <assign location="this_errorminus1" expr="0"/>
+              <assign location="this_errorValue" expr="0"/>
+              <assign location="this_P" expr="0"/>
+              <assign location="this_I" expr="0"/>
+              <assign location="this_D" expr="0"/>
+              <assign location="this_controlValue" expr="0"/>
+              <assign location="output" expr="conf_invalidInputMode == 1 &amp;&amp; this_invalidInputCount == conf_maxInvalidInputOccurences ? conf_invalidInputOutput : this_buffer_output"/>
             </onentry>
           </state>
           <state id="valid_value" viz:xywh="-28,293,252,80">
