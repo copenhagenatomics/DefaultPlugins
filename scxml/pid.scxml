@@ -109,7 +109,7 @@
           </state>
           <state id="invalid_value" viz:xywh="-30,50,215,80">
             <transition event="vector" type="internal">
-              <assign location="output" expr="conf_invalidInputMode == 0 ? output : conf_invalidInputOutput"/>
+              <assign location="output" expr="conf_invalidInputMode == 0 ? this_buffer_output : conf_invalidInputOutput"/>
             </transition>
             <onentry>
               <assign location="this_controlPeriod" expr="this_controlPeriod &gt;= 0.1 ? this_controlPeriod : 0.1"/>
@@ -123,7 +123,7 @@
               <assign location="this_D" expr="conf_invalidInputMode == 0 ? this_D : 0"/>
               <assign location="this_controlValue" expr="conf_invalidInputMode == 0 ? this_controlValue : 0"/>
               <assign location="this_buffer_output" expr="conf_invalidInputMode == 0 ? this_buffer_output : 0"/>
-              <assign location="output" expr="conf_invalidInputMode == 0 ? output : conf_invalidInputOutput"/>
+              <assign location="output" expr="conf_invalidInputMode == 0 ? this_buffer_output : conf_invalidInputOutput"/>
             </onentry>
           </state>
           <state id="valid_value" viz:xywh="-28,293,252,80">
